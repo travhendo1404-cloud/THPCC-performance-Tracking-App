@@ -14,8 +14,8 @@
     .container { max-width: 1200px; margin: 0 auto; }
 
     /* Login Screen Specifics */
-    #login-view { max-width: 400px; margin: 80px auto; background-color: #111927; padding: 30px; border-radius: 16px; border: 1px solid #1a2436; text-align: center; }
-    #login-view .brand-logo { width: 100px; height: 100px; margin-bottom: 20px; }
+    #login-view { max-width: 420px; margin: 60px auto; background-color: #111927; padding: 32px; border-radius: 16px; border: 1px solid #1a2436; text-align: center; }
+    .login-logo { width: 120px; height: 120px; object-fit: contain; margin: 0 auto 16px auto; display: block; }
     .auth-toggle { display: flex; background: #0a111e; border-radius: 8px; margin-bottom: 20px; padding: 4px; border: 1px solid #1a2436; }
     .auth-btn { flex: 1; background: transparent; border: none; color: #8e9bb0; padding: 10px; cursor: pointer; border-radius: 6px; font-weight: 600; }
     .auth-btn.active { background: #00a8e8; color: #0a111e; }
@@ -23,9 +23,9 @@
     /* Header & Branding */
     header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2436; padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .brand-container { display: flex; align-items: center; gap: 14px; }
-    .brand-logo { width: 56px; height: 56px; object-fit: contain; border-radius: 50%; background-color: #111927; padding: 2px; border: 2px solid #00a8e8; }
+    .brand-logo { width: 64px; height: 64px; object-fit: contain; border-radius: 50%; background-color: #111927; padding: 2px; border: 2px solid #00a8e8; }
     
-    h1 { color: #00c2ff; font-size: 1.5rem; font-weight: 700; line-height: 1.2; text-shadow: 0 0 12px rgba(0, 194, 255, 0.2); }
+    h1 { color: #00c2ff; font-size: 1.4rem; font-weight: 700; line-height: 1.2; text-shadow: 0 0 12px rgba(0, 194, 255, 0.2); }
     .subtitle { color: #8e9bb0; font-size: 0.85rem; }
 
     /* Layout Grids */
@@ -33,20 +33,21 @@
     @media(min-width: 900px) { .grid-parent { grid-template-columns: 5fr 7fr; } }
     .grid-2 { display: grid; grid-template-columns: 1fr; gap: 24px; }
     @media(min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
 
     /* Cards & UI Elements */
     .card { background-color: #111927; border: 1px solid #1a2436; border-radius: 16px; padding: 20px; margin-bottom: 24px;}
     .card-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
     .card-subtitle { font-size: 0.75rem; color: #8e9bb0; margin-bottom: 16px; }
-    .section-title { font-size: 0.9rem; font-weight: 600; color: #00c2ff; margin-bottom: 12px; border-bottom: 1px solid #1a2436; padding-bottom: 6px; }
+    .section-title { font-size: 0.85rem; font-weight: 700; color: #00c2ff; margin-bottom: 12px; margin-top: 12px; border-bottom: 1px solid #1a2436; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* Forms */
     .form-group { margin-bottom: 12px; text-align: left; }
     label { display: block; font-size: 0.75rem; color: #8e9bb0; margin-bottom: 4px; font-weight: 600;}
-    input, select { width: 100%; background-color: #0a111e; border: 1px solid #1a2436; color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
+    input, select { width: 100%; background-color: #0a111e; border: 1px solid #1a2436; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
     input:focus, select:focus { border-color: #00a8e8; }
-    .row { display: flex; gap: 12px; }
+    .row { display: flex; gap: 10px; }
     .row > div { flex: 1; }
 
     /* Buttons */
@@ -58,16 +59,21 @@
 
     /* Profile Picture Upload */
     .profile-upload-container { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .profile-img-preview { width: 80px; height: 80px; border-radius: 50%; background-color: #0a111e; border: 2px dashed #1a2436; object-fit: cover; }
+    .profile-img-preview { width: 72px; height: 72px; border-radius: 50%; background-color: #0a111e; border: 2px dashed #00a8e8; object-fit: cover; }
     .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
     .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
 
-    /* Stats & Invoices */
-    .stat-card { background-color: #0a111e; border: 1px solid #1a2436; border-radius: 12px; padding: 16px; }
-    .stat-val { font-size: 1.6rem; font-weight: 700; color: #00c2ff; margin-top: 4px; }
-    .stat-desc { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
-    .invoice-card { background-color: rgba(255, 59, 0, 0.08); border: 1px solid rgba(255, 59, 0, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    /* Stats Cards */
+    .stat-card { background-color: #0a111e; border: 1px solid #1a2436; border-radius: 10px; padding: 10px; text-align: center; }
+    .stat-card label { font-size: 0.68rem; color: #8e9bb0; text-transform: uppercase; margin-bottom: 2px; }
+    .stat-val { font-size: 1.25rem; font-weight: 700; color: #00c2ff; }
+    
+    /* Invoices */
+    .invoice-card { background-color: rgba(255, 59, 0, 0.08); border: 1px solid rgba(255, 59, 0, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
     .invoice-val { font-size: 1.5rem; font-weight: 700; color: #ff3b00; margin-top: 4px; }
+
+    /* Analytical Trend Badge */
+    .trend-box { background-color: rgba(0, 194, 255, 0.08); border: 1px solid rgba(0, 194, 255, 0.25); border-radius: 10px; padding: 12px; margin-top: 12px; color: #7dd3fc; font-size: 0.8rem; }
 
     /* Views */
     #parent-view, #coach-view { display: none; }
@@ -79,7 +85,7 @@
   <!-- LOGIN VIEW -->
   <!-- ========================================== -->
   <div id="login-view">
-    <img src="1000006283_2.png" alt="Travis Henderson Coaching Logo" class="brand-logo" onerror="this.style.display='none'" />
+    <img src="1000006283_2.png" alt="Travis Henderson Coaching Logo" class="login-logo" />
     <h2 style="color: #00c2ff; font-size: 1.2rem; margin-bottom: 4px;">Player Portal</h2>
     <p style="color: #8e9bb0; font-size: 0.85rem; margin-bottom: 24px;">Login to access your dashboard</p>
 
@@ -119,7 +125,7 @@
   <div id="parent-view" class="container">
     <header>
       <div class="brand-container">
-        <img src="1000006283_2.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'" />
+        <img src="1000006283_2.png" alt="Logo" class="brand-logo" />
         <div>
           <h1 id="parentWelcomeName">Welcome, Parent</h1>
           <p class="subtitle">Travis Henderson Professional Cricket Coaching</p>
@@ -129,17 +135,17 @@
     </header>
 
     <div class="grid-parent">
-      <!-- Left Column: Profile & Invoice -->
+      <!-- Left Column: Profile, Financials & Complete Parent Stats -->
       <div>
         <!-- Edit Profile Card -->
         <div class="card">
           <div class="card-title">Player Profile</div>
-          <div class="card-subtitle">Update your son's details and picture</div>
+          <div class="card-subtitle">Manage details & profile photo</div>
           
           <div class="profile-upload-container">
             <img id="parentProfileImgPreview" src="" class="profile-img-preview" alt="Profile" onerror="this.style.backgroundColor='#1a2436'" />
             <div class="file-input-wrapper">
-              <button class="btn-outline">Upload Picture</button>
+              <button class="btn-outline">Upload Photo</button>
               <input type="file" id="profileImageInput" accept="image/*" onchange="previewImage(event)" />
             </div>
           </div>
@@ -148,48 +154,166 @@
             <label>Date of Birth</label>
             <input type="date" id="parentDobInput" />
           </div>
-          <button class="btn-submit" style="padding: 8px; font-size: 0.85rem;" onclick="saveParentProfile()">Save Profile Details</button>
+          <button class="btn-submit" style="padding: 8px; font-size: 0.85rem;" onclick="saveParentProfile()">Save Profile</button>
         </div>
 
-        <!-- Invoice Card -->
+        <!-- Invoice Balance Card -->
         <div class="invoice-card">
-          <label style="color: #ff3b00; font-weight: 600;">Outstanding Fees</label>
+          <label style="color: #ff3b00; font-weight: 600;">Outstanding Invoice Balance</label>
           <div class="invoice-val" id="parentInvoiceDisplay">R 0.00</div>
-          <div class="stat-desc" style="color: #fca5a5;">Please settle via EFT before the next session.</div>
+          <div style="font-size: 0.7rem; color: #fca5a5; margin-top: 2px;">Please process payment before the next session.</div>
         </div>
 
-        <!-- Basic Stats -->
+        <!-- Parent Stats Overview Panel -->
         <div class="card">
-          <div class="card-title">Basic Season Stats</div>
-          <div class="row" style="margin-top: 12px;">
-            <div class="stat-card">
-              <label>Batting Avg</label>
-              <div class="stat-val" id="parentBatAvg">--</div>
-            </div>
-            <div class="stat-card">
-              <label>Wickets</label>
-              <div class="stat-val" id="parentWickets">--</div>
-            </div>
+          <div class="card-title">Season Overview & Metrics</div>
+          
+          <!-- Batting Metrics -->
+          <div class="section-title">Batting Metrics</div>
+          <div class="grid-3" style="margin-bottom: 12px;">
+            <div class="stat-card"><label>Runs</label><div class="stat-val" id="parentRuns">0</div></div>
+            <div class="stat-card"><label>High Score</label><div class="stat-val" id="parentHS">0</div></div>
+            <div class="stat-card"><label>Average</label><div class="stat-val" id="parentBatAvg">0.0</div></div>
+            <div class="stat-card"><label>Strike Rate</label><div class="stat-val" id="parentBatSR">0.0</div></div>
+          </div>
+
+          <!-- Bowling Metrics -->
+          <div class="section-title">Bowling Metrics</div>
+          <div class="grid-3" style="margin-bottom: 12px;">
+            <div class="stat-card"><label>Wickets</label><div class="stat-val" id="parentWickets">0</div></div>
+            <div class="stat-card"><label>Overs</label><div class="stat-val" id="parentOvers">0.0</div></div>
+            <div class="stat-card"><label>Maidens</label><div class="stat-val" id="parentMaidens">0</div></div>
+            <div class="stat-card"><label>B. Average</label><div class="stat-val" id="parentBowlAvg">0.0</div></div>
+            <div class="stat-card"><label>B. Strike Rate</label><div class="stat-val" id="parentBowlSR">0.0</div></div>
+            <div class="stat-card"><label>Economy</label><div class="stat-val" id="parentEcon">0.0</div></div>
+          </div>
+
+          <!-- Fielding Metrics -->
+          <div class="section-title">Fielding Involvements</div>
+          <div class="grid-3">
+            <div class="stat-card"><label>Catches Held</label><div class="stat-val" id="parentCatches">0</div></div>
+            <div class="stat-card"><label>Catches Dropped</label><div class="stat-val" id="parentDrops" style="color:#ff3b00;">0</div></div>
+            <div class="stat-card"><label>Run Outs</label><div class="stat-val" id="parentRunOuts">0</div></div>
+          </div>
+
+          <!-- Analytical Trends -->
+          <div class="section-title">Analytical Trends</div>
+          <div class="trend-box" id="parentTrendText">
+            <strong>Coach Note:</strong> Strong performance consistency on full deliveries. Work ongoing on back-foot defensive positioning against short-pitched bowling.
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Match Entry (Keeping previous feature as requested) -->
+      <!-- Right Column: Full Post-Match Logging Form -->
       <div class="card">
-        <div class="card-title">Post-Match Parent Entry</div>
-        <div class="card-subtitle">Fast match logging following fixture completion</div>
-        
-        <div class="section-title">1. Batting Details</div>
-        <div class="row form-group">
-          <div><label>Runs Scored</label><input type="number" placeholder="0" /></div>
-          <div><label>Balls Faced</label><input type="number" placeholder="0" /></div>
-        </div>
-        <div class="section-title" style="margin-top: 16px;">2. Bowling Details</div>
-        <div class="row form-group">
-          <div><label>Overs Bowled</label><input type="number" step="0.1" placeholder="0.0" /></div>
-          <div><label>Wickets Taken</label><input type="number" placeholder="0" /></div>
-        </div>
-        <button type="button" class="btn-submit" onclick="alert('Match data logged to Coach Database!')">Submit Match Entry</button>
+        <div class="card-title">Post-Match Data Entry</div>
+        <div class="card-subtitle">Fast, structured entry for Coach Travis's analytics engine</div>
+
+        <form id="matchForm">
+          <div class="form-group">
+            <label>Match Date</label>
+            <input type="date" value="2026-09-28" required />
+          </div>
+
+          <!-- 1. Batting Details -->
+          <div class="section-title">1. Batting Performance</div>
+          <div class="row form-group">
+            <div><label>Runs Scored</label><input type="number" placeholder="0" /></div>
+            <div><label>Balls Faced</label><input type="number" placeholder="0" /></div>
+            <div>
+              <label>Status</label>
+              <select>
+                <option>Out</option>
+                <option>Not Out</option>
+                <option>Retired</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <div>
+              <label>Dismissal Mode</label>
+              <select>
+                <option>N/A (Not Out)</option>
+                <option>Bowled</option>
+                <option>Caught</option>
+                <option>LBW</option>
+                <option>Run Out</option>
+                <option>Stumped</option>
+              </select>
+            </div>
+            <div>
+              <label>Type of Bowler Faced</label>
+              <select>
+                <option>Right-Arm Fast / Medium</option>
+                <option>Left-Arm Fast / Medium</option>
+                <option>Off-Spin</option>
+                <option>Leg-Spin</option>
+                <option>Left-Arm Orthodox Spin</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <div>
+              <label>Catching Position (If caught)</label>
+              <select>
+                <option>N/A</option>
+                <option>Slip / Gully</option>
+                <option>Cover / Mid-Off Ring</option>
+                <option>Mid-Wicket / Square Leg</option>
+                <option>Deep Boundary</option>
+                <option>Wicketkeeper</option>
+              </select>
+            </div>
+            <div>
+              <label>Delivery Line</label>
+              <select>
+                <option>Outside Off</option>
+                <option>Stumps / Straight</option>
+                <option>Down Leg</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <div>
+              <label>Delivery Length</label>
+              <select>
+                <option>Full Pitch Up</option>
+                <option>Good Length</option>
+                <option>Short / Bouncer</option>
+                <option>Yorker / Full Toss</option>
+              </select>
+            </div>
+            <div>
+              <label>Assessment</label>
+              <select>
+                <option>Unforced Error (Got self out)</option>
+                <option>Good Ball (Forced Error)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. Bowling Details -->
+          <div class="section-title">2. Bowling Details</div>
+          <div class="row form-group">
+            <div><label>Overs Bowled</label><input type="number" step="0.1" placeholder="0.0" /></div>
+            <div><label>Maidens</label><input type="number" placeholder="0" /></div>
+            <div><label>Runs Conceded</label><input type="number" placeholder="0" /></div>
+            <div><label>Wickets Taken</label><input type="number" placeholder="0" /></div>
+          </div>
+
+          <!-- 3. Fielding Involvements -->
+          <div class="section-title">3. Fielding Involvements</div>
+          <div class="row form-group">
+            <div><label>Catches Held</label><input type="number" placeholder="0" /></div>
+            <div><label>Catches Dropped</label><input type="number" placeholder="0" /></div>
+            <div><label>Run Out Involvements</label><input type="number" placeholder="0" /></div>
+          </div>
+
+          <button type="button" class="btn-submit" onclick="alert('Match entry successfully submitted to Coach Travis!')">Submit Match Entry</button>
+        </form>
       </div>
     </div>
   </div>
@@ -200,7 +324,7 @@
   <div id="coach-view" class="container">
     <header>
       <div class="brand-container">
-        <img src="1000006283_2.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'" />
+        <img src="1000006283_2.png" alt="Logo" class="brand-logo" />
         <div>
           <h1>Coach Dashboard</h1>
           <p class="subtitle">Travis Henderson Professional Cricket Coaching - Admin</p>
@@ -210,10 +334,10 @@
     </header>
 
     <div class="grid-2">
-      <!-- Player Addition Panel -->
+      <!-- Player Roster Generator -->
       <div class="card">
         <div class="card-title">Add New Player</div>
-        <div class="card-subtitle">Creates a profile and generates a parent login dropdown entry</div>
+        <div class="card-subtitle">Creates player profile & parent passcode entry</div>
         <div class="row form-group">
           <div>
             <label>Player Full Name</label>
@@ -234,7 +358,7 @@
       <!-- Financial Management -->
       <div class="card">
         <div class="card-title">Manage Player Accounts</div>
-        <div class="card-subtitle">Update outstanding invoice amounts for existing players</div>
+        <div class="card-subtitle">Update outstanding balances for existing accounts</div>
         <div class="row form-group" style="align-items: flex-end;">
           <div>
             <label>Select Player</label>
@@ -249,37 +373,37 @@
       </div>
     </div>
 
-    <!-- Advanced Analytics (From previous version) -->
+    <!-- Advanced Hyper-Analytics Section -->
     <div class="card">
       <div class="card-title">Squad Technical & Strategic Breakdown</div>
-      <div class="card-subtitle">Granular metrics accessible exclusively on coach view</div>
+      <div class="card-subtitle">Granular performance engine compiled from parent match entries</div>
       <div class="grid-4" style="margin-top: 16px;">
         <div class="stat-card">
           <label>Control Index (CEI)</label>
           <div class="stat-val">72.5%</div>
-          <div class="stat-desc">% Dismissals from execution errors vs forced</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Execution vs Forced errors</div>
         </div>
         <div class="stat-card">
           <label>Bowling Dot Ball %</label>
           <div class="stat-val">62.5%</div>
-          <div class="stat-desc">Pressure metric per spell</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Pressure rate per spell</div>
         </div>
         <div class="stat-card">
           <label>Execution Strike Rate</label>
           <div class="stat-val" style="color: #fff;">15.1</div>
-          <div class="stat-desc">Balls per earned wicket</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Balls per earned wicket</div>
         </div>
         <div class="stat-card">
           <label>Fielding Net Impact</label>
           <div class="stat-val" style="color: #00c2ff;">+24 Runs</div>
-          <div class="stat-desc">Estimated net runs saved</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Estimated net runs saved</div>
         </div>
       </div>
       
-      <!-- Chart Containers -->
+      <!-- Charts -->
       <div class="grid-2">
         <div>
-          <div class="section-title">Batting Dismissal Vulnerability by Length</div>
+          <div class="section-title">Batting Vulnerability by Length</div>
           <div style="height: 200px;"><canvas id="lengthChart"></canvas></div>
         </div>
         <div>
@@ -294,15 +418,56 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    // 1. Data Structure
+    // Database Structure containing stats requested for Parent Dashboard
     let players = {
-      "player_1": { name: "John Doe", passcode: "1234", dob: "", photo: "", invoice: 1250, battingAvg: "38.4", wickets: "19" },
-      "player_2": { name: "Jane Smith", passcode: "5678", dob: "2010-05-14", photo: "", invoice: 850, battingAvg: "22.1", wickets: "4" }
+      "player_1": { 
+        name: "John Doe", 
+        passcode: "1234", 
+        dob: "2008-04-12", 
+        photo: "", 
+        invoice: 1250, 
+        runs: 384,
+        highestScore: 88,
+        battingAvg: 38.4,
+        strikeRate: 130.2,
+        catches: 8,
+        drops: 1,
+        runOuts: 3,
+        wickets: 19,
+        overs: 42.0,
+        maidens: 6,
+        bowlingAvg: 14.2,
+        bowlingSR: 13.2,
+        economy: 6.45,
+        trend: "Strong performance against spin bowlers. Front-foot drive control is high (78%)."
+      },
+      "player_2": { 
+        name: "Jane Smith", 
+        passcode: "5678", 
+        dob: "2010-05-14", 
+        photo: "", 
+        invoice: 850, 
+        runs: 154,
+        highestScore: 42,
+        battingAvg: 22.0,
+        strikeRate: 98.5,
+        catches: 4,
+        drops: 2,
+        runOuts: 1,
+        wickets: 8,
+        overs: 20.0,
+        maidens: 2,
+        bowlingAvg: 18.5,
+        bowlingSR: 15.0,
+        economy: 7.40,
+        trend: "Excellent bowling accuracy on good length deliveries. Working on shortening seam release position."
+      }
     };
+    
     let currentUserId = null;
     let chartsInitialized = false;
 
-    // 2. Initialization
+    // Initialization
     function init() {
       populatePlayerDropdowns();
     }
@@ -318,10 +483,10 @@
         loginSelect.options.add(new Option(data.name, id));
         coachSelect.options.add(new Option(data.name, id));
       }
-      loadCoachInvoiceData(); // Set initial invoice value in coach dashboard
+      loadCoachInvoiceData();
     }
 
-    // 3. Login Flow
+    // Login Navigation
     function toggleLoginType(type) {
       document.getElementById('btn-login-parent').classList.remove('active');
       document.getElementById('btn-login-coach').classList.remove('active');
@@ -352,7 +517,7 @@
 
     function loginCoach() {
       const passcode = document.getElementById('loginCoachPasscode').value;
-      if (passcode === 'coach123') { // Demo Coach Password
+      if (passcode === 'coach123') {
         switchView('coach-view');
         renderCharts();
       } else {
@@ -381,15 +546,32 @@
       document.getElementById(viewId).style.display = 'block';
     }
 
-    // 4. Parent Dashboard Logic
+    // Load Data into Parent Dashboard
     function loadParentDashboard() {
       const data = players[currentUserId];
       document.getElementById('parentWelcomeName').innerText = `${data.name}'s Dashboard`;
       document.getElementById('parentInvoiceDisplay').innerText = `R ${data.invoice.toFixed(2)}`;
       document.getElementById('parentDobInput').value = data.dob || '';
       document.getElementById('parentProfileImgPreview').src = data.photo || '';
+      
+      // Populate Stats
+      document.getElementById('parentRuns').innerText = data.runs;
+      document.getElementById('parentHS').innerText = data.highestScore;
       document.getElementById('parentBatAvg').innerText = data.battingAvg;
+      document.getElementById('parentBatSR').innerText = data.strikeRate;
+      
       document.getElementById('parentWickets').innerText = data.wickets;
+      document.getElementById('parentOvers').innerText = data.overs;
+      document.getElementById('parentMaidens').innerText = data.maidens;
+      document.getElementById('parentBowlAvg').innerText = data.bowlingAvg;
+      document.getElementById('parentBowlSR').innerText = data.bowlingSR;
+      document.getElementById('parentEcon').innerText = data.economy;
+      
+      document.getElementById('parentCatches').innerText = data.catches;
+      document.getElementById('parentDrops').innerText = data.drops;
+      document.getElementById('parentRunOuts').innerText = data.runOuts;
+      
+      document.getElementById('parentTrendText').innerHTML = `<strong>Coach Note:</strong> ${data.trend}`;
     }
 
     function previewImage(event) {
@@ -405,15 +587,12 @@
 
     function saveParentProfile() {
       if (!currentUserId) return;
-      const newDob = document.getElementById('parentDobInput').value;
-      const newPhoto = document.getElementById('parentProfileImgPreview').src;
-      
-      players[currentUserId].dob = newDob;
-      players[currentUserId].photo = newPhoto;
-      alert("Profile updated successfully!");
+      players[currentUserId].dob = document.getElementById('parentDobInput').value;
+      players[currentUserId].photo = document.getElementById('parentProfileImgPreview').src;
+      alert("Profile details successfully saved!");
     }
 
-    // 5. Coach Dashboard Logic
+    // Coach Dashboard Actions
     function addNewPlayer() {
       const name = document.getElementById('newPlayerName').value.trim();
       const passcode = document.getElementById('newPlayerPasscode').value.trim();
@@ -431,8 +610,20 @@
         dob: "",
         photo: "",
         invoice: invoice,
-        battingAvg: "0.0",
-        wickets: "0"
+        runs: 0,
+        highestScore: 0,
+        battingAvg: 0.0,
+        strikeRate: 0.0,
+        catches: 0,
+        drops: 0,
+        runOuts: 0,
+        wickets: 0,
+        overs: 0.0,
+        maidens: 0,
+        bowlingAvg: 0.0,
+        bowlingSR: 0.0,
+        economy: 0.0,
+        trend: "New player added. Match data pending entry."
       };
 
       populatePlayerDropdowns();
@@ -440,7 +631,7 @@
       document.getElementById('newPlayerName').value = '';
       document.getElementById('newPlayerPasscode').value = '';
       document.getElementById('newPlayerInvoice').value = '0';
-      alert(`${name} added to roster and parent login generated!`);
+      alert(`${name} added to roster successfully!`);
     }
 
     function loadCoachInvoiceData() {
@@ -460,7 +651,7 @@
       }
     }
 
-    // 6. Charts (Coach Only)
+    // Charts for Coach Dashboard
     function renderCharts() {
       if (chartsInitialized) return;
       chartsInitialized = true;
@@ -484,7 +675,6 @@
       });
     }
 
-    // Boot app
     window.onload = init;
   </script>
 </body>
