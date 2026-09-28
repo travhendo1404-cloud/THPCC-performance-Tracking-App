@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Travis Henderson Professional Cricket Coaching</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
@@ -46,7 +45,6 @@
         </div>
       </div>
 
-      <!-- Navigation & Lock Switch -->
       <div id="nav-controls" class="hidden flex items-center gap-2">
         <span id="role-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700"></span>
         <button onclick="logout()" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 text-xs font-semibold rounded-lg transition flex items-center gap-1">
@@ -81,7 +79,6 @@
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Select Player (Your Child)</label>
           <select id="parent-player-select" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
-            <!-- Populated dynamically -->
           </select>
         </div>
         <div>
@@ -110,39 +107,38 @@
     <!-- ========================================================= -->
     <div id="coach-dashboard" class="hidden space-y-6">
       
-      <!-- Top Actions & Player Manager -->
       <div class="bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
             <i data-lucide="shield-check" class="w-5 h-5 text-red-500"></i> Master Coach Control Panel
           </h2>
-          <p class="text-xs text-slate-400">Manage player rosters, set invoice balances, and track performances</p>
+          <p class="text-xs text-slate-400">Manage player rosters, photo uploads, invoice balances, and match stats</p>
         </div>
         <button onclick="openAddPlayerModal()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow">
           <i data-lucide="user-plus" class="w-4 h-4"></i> Add New Player Profile
         </button>
       </div>
 
-      <!-- Roster and Player Stats Layout -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Player Roster Sidebar -->
+        <!-- Roster Sidebar -->
         <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 space-y-3">
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
             <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> Academy Players (<span id="player-count">0</span>)
           </h3>
-          <div id="roster-list" class="space-y-2 max-h-[500px] overflow-y-auto custom-scrollbar pr-1">
-            <!-- Dynamic Player Cards -->
+          <div id="roster-list" class="space-y-2 max-h-[550px] overflow-y-auto custom-scrollbar pr-1">
           </div>
         </div>
 
-        <!-- Selected Player Detailed View -->
+        <!-- Player Detail View -->
         <div id="player-detail-panel" class="lg:col-span-2 bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 space-y-6">
           <div class="flex justify-between items-start border-b border-slate-700/60 pb-4">
             <div class="flex items-center gap-4">
-              <!-- Player Photo / Avatar -->
-              <div id="view-player-photo-container" class="relative">
+              <div class="relative group">
                 <img id="view-player-photo" src="" alt="Player Photo" class="w-16 h-16 rounded-full object-cover border-2 border-cyan-400 shadow">
+                <label for="coach-photo-upload" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer text-[9px] font-bold transition">
+                  Upload Photo
+                </label>
+                <input type="file" id="coach-photo-upload" accept="image/*" onchange="uploadPlayerPhoto(event)" class="hidden">
               </div>
               <div>
                 <h3 id="view-player-name" class="text-xl font-bold text-white">Select a Player</h3>
@@ -152,7 +148,7 @@
 
             <div class="flex gap-2">
               <button id="btn-edit-player" onclick="editCurrentPlayer()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded border border-slate-700 flex items-center gap-1">
-                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i> Edit Profile
+                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i> Edit
               </button>
               <button id="btn-delete-player" onclick="deleteCurrentPlayer()" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium rounded border border-red-500/30 flex items-center gap-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
@@ -202,7 +198,6 @@
               <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Match Performance History
             </h4>
             <div id="match-history-list" class="space-y-2">
-              <!-- Dynamic Match Entries -->
             </div>
           </div>
         </div>
@@ -213,25 +208,25 @@
     <!-- ========================================================= -->
     <!-- PARENT DASHBOARD & MATCH SUBMISSION                      -->
     <!-- ========================================================= -->
-    <div id="parent-dashboard" class="hidden max-w-lg mx-auto space-y-6">
+    <div id="parent-dashboard" class="hidden max-w-xl mx-auto space-y-6">
       
       <!-- Parent Header Info + Photo Upload -->
       <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="relative group">
-            <img id="parent-player-photo" src="" alt="Player Photo" class="w-12 h-12 rounded-full object-cover border-2 border-cyan-400">
-            <label for="photo-upload-input" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer text-[9px] font-bold transition">
-              Change
+            <img id="parent-player-photo" src="" alt="Player Photo" class="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow">
+            <label for="parent-photo-upload" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer text-[9px] font-bold transition">
+              Upload Photo
             </label>
-            <input type="file" id="photo-upload-input" accept="image/*" onchange="uploadPlayerPhoto(event)" class="hidden">
+            <input type="file" id="parent-photo-upload" accept="image/*" onchange="uploadPlayerPhoto(event)" class="hidden">
           </div>
           <div>
             <p class="text-xs text-slate-400">Parent Portal</p>
             <p id="parent-portal-player-name" class="font-bold text-white text-base">-</p>
+            <p class="text-[10px] text-cyan-400 italic">Click photo to upload custom image</p>
           </div>
         </div>
         
-        <!-- Parent Invoice View (Read Only) -->
         <div class="text-right bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
           <span class="text-[9px] text-slate-400 block uppercase font-bold">Invoice Due</span>
           <span id="parent-invoice-due" class="text-sm font-bold text-amber-400">R 0.00</span>
@@ -245,23 +240,26 @@
         </h3>
 
         <form id="match-entry-form" onsubmit="submitMatchPerformance(event)" class="space-y-4">
+          
+          <!-- Match Meta Info -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs text-slate-300 mb-1">Match Date</label>
               <input type="date" id="match-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
             </div>
             <div>
-              <label class="block text-xs text-slate-300 mb-1">Format</label>
+              <label class="block text-xs text-slate-300 mb-1">Match Format</label>
               <select id="match-format" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
                 <option>50 Over</option>
                 <option>T20</option>
-                <option>Two-Day</option>
+                <option>Declaration / Two-Day</option>
                 <option>Time Cricket</option>
+                <option>Practice / Friendly</option>
               </select>
             </div>
           </div>
 
-          <!-- Playing For & Versus -->
+          <!-- Teams -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs text-slate-300 mb-1">Playing For (Team)</label>
@@ -273,29 +271,96 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Runs Scored</label>
-              <input type="number" id="match-runs" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Balls Faced</label>
-              <input type="number" id="match-balls" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Overs Bowled</label>
-              <input type="number" step="0.1" id="match-overs" placeholder="0.0" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Wickets Taken</label>
-              <input type="number" id="match-wickets" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
+          <!-- Participation Checklist (Batted / Bowled) -->
+          <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-2">
+            <span class="block text-xs font-bold text-slate-300">Did the player bat or bowl in this match?</span>
+            <div class="flex gap-4">
+              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                <input type="checkbox" id="check-batted" onchange="toggleInningsSections()" class="rounded bg-slate-800 border-slate-700 text-red-600 focus:ring-0">
+                Batted
+              </label>
+              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                <input type="checkbox" id="check-bowled" onchange="toggleInningsSections()" class="rounded bg-slate-800 border-slate-700 text-red-600 focus:ring-0">
+                Bowled
+              </label>
             </div>
           </div>
 
-          <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+          <!-- BATTING DETAILS SECTION -->
+          <div id="batting-section" class="hidden space-y-3 bg-slate-900/90 p-4 rounded-xl border border-cyan-500/30">
+            <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="swords" class="w-4 h-4"></i> Batting Innings Details
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">Innings Status</label>
+                <select id="bat-status" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                  <option value="Not Out">Not Out</option>
+                  <option value="Caught">Caught</option>
+                  <option value="Bowled">Bowled</option>
+                  <option value="LBW">LBW</option>
+                  <option value="Run Out">Run Out</option>
+                  <option value="Stumped">Stumped</option>
+                  <option value="DNB">Did Not Bat</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">Batting Order Position</label>
+                <input type="number" id="bat-pos" min="1" max="11" placeholder="e.g. 3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Runs Scored</label>
+                <input type="number" id="bat-runs" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Balls Faced</label>
+                <input type="number" id="bat-balls" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Fours (4s)</label>
+                <input type="number" id="bat-fours" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Sixes (6s)</label>
+                <input type="number" id="bat-sixes" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+            </div>
+          </div>
+
+          <!-- BOWLING DETAILS SECTION -->
+          <div id="bowling-section" class="hidden space-y-3 bg-slate-900/90 p-4 rounded-xl border border-amber-500/30">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="target" class="w-4 h-4"></i> Bowling Figures
+            </h4>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Overs Bowled</label>
+                <input type="number" step="0.1" id="bowl-overs" placeholder="0.0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Maiden Overs</label>
+                <input type="number" id="bowl-maidens" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Runs Conceded</label>
+                <input type="number" id="bowl-runs" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">Wickets Taken</label>
+                <input type="number" id="bowl-wickets" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">Extras (Wides/NB)</label>
+                <input type="number" id="bowl-extras" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-lg">
             <i data-lucide="send" class="w-4 h-4"></i> Submit Match Figures
           </button>
         </form>
@@ -348,20 +413,20 @@
 
     const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80";
 
-    // APP STATE MANAGEMENT (Saved in localStorage)
+    // LOCAL STORAGE STATE MANAGEMENT
     let players = JSON.parse(localStorage.getItem('thpcc_players')) || [
       { id: '1', name: 'David Miller', squad: 'U17', role: 'Top-Order Batter', passcode: '1111', invoiceDue: 450.00, photo: DEFAULT_AVATAR, matches: [] },
       { id: '2', name: 'Cameron Stander', squad: 'U19', role: 'Right-Arm Fast', passcode: '2222', invoiceDue: 0.00, photo: DEFAULT_AVATAR, matches: [] }
     ];
 
     let currentSelectedPlayerId = players[0]?.id || null;
-    let currentUserRole = null; // 'coach' or 'parent'
+    let currentUserRole = null;
 
     function saveState() {
       localStorage.setItem('thpcc_players', JSON.stringify(players));
     }
 
-    // AUTH & ROLE SWITCHING
+    // LOGIN & PORTAL ACCESS
     function showLoginForm(role) {
       const parentTab = document.getElementById('tab-parent');
       const coachTab = document.getElementById('tab-coach');
@@ -410,7 +475,7 @@
     function handleCoachLogin(e) {
       e.preventDefault();
       const pin = document.getElementById('coach-pin').value;
-      if (pin === "1234") { // Default Security PIN
+      if (pin === "1234") {
         currentUserRole = 'coach';
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('coach-dashboard').classList.remove('hidden');
@@ -427,7 +492,7 @@
       location.reload();
     }
 
-    // PHOTO UPLOAD FUNCTION
+    // PHOTO UPLOAD FUNCTION (Works for both Coach and Parent)
     function uploadPlayerPhoto(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -439,21 +504,37 @@
         if (player) {
           player.photo = base64Image;
           saveState();
-          document.getElementById('parent-player-photo').src = base64Image;
-          alert("Profile photo updated successfully!");
+          
+          if (document.getElementById('view-player-photo')) {
+            document.getElementById('view-player-photo').src = base64Image;
+          }
+          if (document.getElementById('parent-player-photo')) {
+            document.getElementById('parent-player-photo').src = base64Image;
+          }
+          renderCoachRoster();
+          alert(`Photo updated successfully for ${player.name}!`);
         }
       };
       reader.readAsDataURL(file);
     }
 
-    // COACH ROSTER & PLAYER MANAGEMENT
+    // DYNAMIC MATCH ENTRY SECTIONS
+    function toggleInningsSections() {
+      const batChecked = document.getElementById('check-batted').checked;
+      const bowlChecked = document.getElementById('check-bowled').checked;
+
+      document.getElementById('batting-section').classList.toggle('hidden', !batChecked);
+      document.getElementById('bowling-section').classList.toggle('hidden', !bowlChecked);
+    }
+
+    // COACH ROSTER & DETAILS
     function renderCoachRoster() {
       const rosterList = document.getElementById('roster-list');
       document.getElementById('player-count').innerText = players.length;
 
       rosterList.innerHTML = players.map(p => `
         <div onclick="selectPlayerForView('${p.id}')" class="p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg border ${p.id === currentSelectedPlayerId ? 'border-red-500' : 'border-slate-800'} cursor-pointer transition flex items-center gap-3">
-          <img src="${p.photo || DEFAULT_AVATAR}" class="w-9 h-9 rounded-full object-cover border border-slate-700">
+          <img src="${p.photo || DEFAULT_AVATAR}" class="w-10 h-10 rounded-full object-cover border border-slate-700">
           <div class="flex-1">
             <p class="text-xs font-semibold text-white">${p.name}</p>
             <p class="text-[10px] text-slate-400">${p.role} • ${p.squad}</p>
@@ -478,31 +559,40 @@
       document.getElementById('view-player-photo').src = player.photo || DEFAULT_AVATAR;
       document.getElementById('view-player-invoice-display').innerText = "R " + (parseFloat(player.invoiceDue) || 0).toFixed(2);
 
-      // Calculate career stats
+      // Career Statistics Calculation
       const matchesCount = player.matches.length;
-      const totalRuns = player.matches.reduce((sum, m) => sum + (parseInt(m.runs) || 0), 0);
-      const totalWickets = player.matches.reduce((sum, m) => sum + (parseInt(m.wickets) || 0), 0);
-      const avg = matchesCount > 0 ? (totalRuns / matchesCount).toFixed(1) : "0.0";
+      const totalRuns = player.matches.reduce((sum, m) => sum + (parseInt(m.batting?.runs) || 0), 0);
+      const totalWickets = player.matches.reduce((sum, m) => sum + (parseInt(m.bowling?.wickets) || 0), 0);
+      const timesDismissed = player.matches.filter(m => m.batting && m.batting.status !== 'Not Out' && m.batting.status !== 'DNB').length;
+      const avg = timesDismissed > 0 ? (totalRuns / timesDismissed).toFixed(1) : totalRuns.toFixed(1);
 
       document.getElementById('stat-matches').innerText = matchesCount;
       document.getElementById('stat-runs').innerText = totalRuns;
       document.getElementById('stat-avg').innerText = avg;
       document.getElementById('stat-wickets').innerText = totalWickets;
 
-      // Render Match History
+      // History
       const historyList = document.getElementById('match-history-list');
       if (player.matches.length === 0) {
         historyList.innerHTML = `<p class="text-xs text-slate-500 italic">No matches submitted yet.</p>`;
       } else {
         historyList.innerHTML = player.matches.map(m => `
-          <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
-            <div>
-              <p class="text-xs font-bold text-white">${m.playingFor || 'Team'} vs ${m.opp} (${m.format})</p>
-              <p class="text-[10px] text-slate-400">${m.date}</p>
+          <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+              <div>
+                <p class="text-xs font-bold text-white">${m.playingFor} vs ${m.opp}</p>
+                <p class="text-[10px] text-slate-400">${m.date} • ${m.format}</p>
+              </div>
             </div>
-            <div class="text-right text-xs">
-              <span class="text-cyan-400 font-bold block">${m.runs} Runs (${m.balls}b)</span>
-              <span class="text-amber-400 text-[10px]">${m.wickets} Wkts / ${m.overs} ov</span>
+            <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+              <div>
+                <span class="text-[10px] text-slate-500 block uppercase">Batting</span>
+                ${m.batting ? `<span class="text-cyan-400 font-bold">${m.batting.runs} runs (${m.batting.balls}b) -${m.batting.status}</span>` : '<span class="text-slate-600">DNB</span>'}
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-500 block uppercase">Bowling</span>
+                ${m.bowling ? `<span class="text-amber-400 font-bold">${m.bowling.wickets}/${m.bowling.runs} (${m.bowling.overs} ov)</span>` : '<span class="text-slate-600">Did not bowl</span>'}
+              </div>
             </div>
           </div>
         `).join('');
@@ -521,7 +611,7 @@
       }
     }
 
-    // MODALS: ADD / EDIT / DELETE PLAYERS
+    // MODAL EDITING
     function openAddPlayerModal() {
       document.getElementById('modal-title').innerText = "Add New Player Profile";
       document.getElementById('edit-player-id').value = "";
@@ -557,7 +647,6 @@
       const invoice = parseFloat(document.getElementById('form-player-invoice').value) || 0;
 
       if (editId) {
-        // Edit existing
         const p = players.find(item => item.id === editId);
         if (p) {
           p.name = name;
@@ -567,7 +656,6 @@
           p.invoiceDue = invoice;
         }
       } else {
-        // Add new
         const newPlayer = {
           id: Date.now().toString(),
           name, squad, role, passcode,
@@ -599,30 +687,52 @@
       }
     }
 
-    // PARENT MATCH SUBMISSION
+    // MATCH SUBMISSION
     function submitMatchPerformance(e) {
       e.preventDefault();
       const player = players.find(p => p.id === currentSelectedPlayerId);
       if (!player) return;
 
-      const newMatch = {
+      const batChecked = document.getElementById('check-batted').checked;
+      const bowlChecked = document.getElementById('check-bowled').checked;
+
+      if (!batChecked && !bowlChecked) {
+        alert("Please select at least one activity (Batted or Bowled).");
+        return;
+      }
+
+      const matchData = {
+        id: Date.now().toString(),
         date: document.getElementById('match-date').value,
         format: document.getElementById('match-format').value,
         playingFor: document.getElementById('match-playing-for').value,
         opp: document.getElementById('match-opp').value,
-        runs: document.getElementById('match-runs').value || 0,
-        balls: document.getElementById('match-balls').value || 0,
-        overs: document.getElementById('match-overs').value || 0,
-        wickets: document.getElementById('match-wickets').value || 0
+        batting: batChecked ? {
+          status: document.getElementById('bat-status').value,
+          pos: document.getElementById('bat-pos').value,
+          runs: parseInt(document.getElementById('bat-runs').value) || 0,
+          balls: parseInt(document.getElementById('bat-balls').value) || 0,
+          fours: parseInt(document.getElementById('bat-fours').value) || 0,
+          sixes: parseInt(document.getElementById('bat-sixes').value) || 0
+        } : null,
+        bowling: bowlChecked ? {
+          overs: parseFloat(document.getElementById('bowl-overs').value) || 0,
+          maidens: parseInt(document.getElementById('bowl-maidens').value) || 0,
+          runs: parseInt(document.getElementById('bowl-runs').value) || 0,
+          wickets: parseInt(document.getElementById('bowl-wickets').value) || 0,
+          extras: parseInt(document.getElementById('bowl-extras').value) || 0
+        } : null
       };
 
-      player.matches.unshift(newMatch);
+      player.matches.unshift(matchData);
       saveState();
       alert(`Match figures submitted successfully for ${player.name}!`);
       document.getElementById('match-entry-form').reset();
+      document.getElementById('batting-section').classList.add('hidden');
+      document.getElementById('bowling-section').classList.add('hidden');
     }
 
-    // Initial Load
+    // Init
     populateParentDropdown();
   </script>
 </body>
