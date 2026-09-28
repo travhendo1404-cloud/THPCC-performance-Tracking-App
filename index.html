@@ -1,778 +1,681 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Travis Henderson Professional Cricket Coaching</title>
-  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for Performance Trends -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    /* Base & Palette */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #0a111e; color: #f1f5f9; padding: 20px; line-height: 1.5; }
-    .container { max-width: 1200px; margin: 0 auto; }
-
-    /* Login Screen Specifics */
-    #login-view { max-width: 420px; margin: 60px auto; background-color: #111927; padding: 32px; border-radius: 16px; border: 1px solid #1a2436; text-align: center; }
-    .login-logo { width: 120px; height: 120px; object-fit: contain; margin: 0 auto 16px auto; display: block; }
-    .auth-toggle { display: flex; background: #0a111e; border-radius: 8px; margin-bottom: 20px; padding: 4px; border: 1px solid #1a2436; }
-    .auth-btn { flex: 1; background: transparent; border: none; color: #8e9bb0; padding: 10px; cursor: pointer; border-radius: 6px; font-weight: 600; }
-    .auth-btn.active { background: #00a8e8; color: #0a111e; }
-
-    /* Header & Branding */
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2436; padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
-    .brand-container { display: flex; align-items: center; gap: 14px; }
-    .brand-logo { width: 64px; height: 64px; object-fit: contain; border-radius: 50%; background-color: #111927; padding: 2px; border: 2px solid #00a8e8; }
-    
-    h1 { color: #00c2ff; font-size: 1.4rem; font-weight: 700; line-height: 1.2; text-shadow: 0 0 12px rgba(0, 194, 255, 0.2); }
-    .subtitle { color: #8e9bb0; font-size: 0.85rem; }
-
-    /* Layout Grids */
-    .grid-parent { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    @media(min-width: 900px) { .grid-parent { grid-template-columns: 5fr 7fr; } }
-    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    @media(min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-
-    /* Cards & UI Elements */
-    .card { background-color: #111927; border: 1px solid #1a2436; border-radius: 16px; padding: 20px; margin-bottom: 24px;}
-    .card-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
-    .card-subtitle { font-size: 0.75rem; color: #8e9bb0; margin-bottom: 16px; }
-    .section-title { font-size: 0.85rem; font-weight: 700; color: #00c2ff; margin-bottom: 12px; margin-top: 12px; border-bottom: 1px solid #1a2436; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* Forms */
-    .form-group { margin-bottom: 12px; text-align: left; }
-    label { display: block; font-size: 0.75rem; color: #8e9bb0; margin-bottom: 4px; font-weight: 600;}
-    input, select, textarea { width: 100%; background-color: #0a111e; border: 1px solid #1a2436; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
-    input:focus, select:focus, textarea:focus { border-color: #00a8e8; }
-    .row { display: flex; gap: 10px; }
-    .row > div { flex: 1; }
-
-    /* Buttons */
-    .btn-submit { width: 100%; background-color: #00a8e8; color: #0a111e; font-weight: 700; border: none; padding: 12px; border-radius: 10px; cursor: pointer; margin-top: 12px; transition: background 0.2s; }
-    .btn-submit:hover { background-color: #00c2ff; }
-    .btn-logout { background-color: #1a2436; color: #f1f5f9; border: 1px solid #2d3748; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-    .btn-logout:hover { background-color: #2d3748; }
-    .btn-outline { background: transparent; border: 1px solid #00a8e8; color: #00a8e8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;}
-    .btn-danger { background: rgba(255, 59, 0, 0.15); border: 1px solid #ff3b00; color: #ff3b00; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s; }
-    .btn-danger:hover { background: rgba(255, 59, 0, 0.3); }
-
-    /* Profile Picture Upload */
-    .profile-upload-container { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .profile-img-preview { width: 72px; height: 72px; border-radius: 50%; background-color: #0a111e; border: 2px dashed #00a8e8; object-fit: cover; }
-    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
-    .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-
-    /* Stats Cards */
-    .stat-card { background-color: #0a111e; border: 1px solid #1a2436; border-radius: 10px; padding: 10px; text-align: center; }
-    .stat-card label { font-size: 0.68rem; color: #8e9bb0; text-transform: uppercase; margin-bottom: 2px; }
-    .stat-val { font-size: 1.25rem; font-weight: 700; color: #00c2ff; }
-    
-    /* Invoices */
-    .invoice-card { background-color: rgba(255, 59, 0, 0.08); border: 1px solid rgba(255, 59, 0, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
-    .invoice-val { font-size: 1.5rem; font-weight: 700; color: #ff3b00; margin-top: 4px; }
-
-    /* Analytical Trend Badge */
-    .trend-box { background-color: rgba(0, 194, 255, 0.08); border: 1px solid rgba(0, 194, 255, 0.25); border-radius: 10px; padding: 12px; margin-top: 12px; color: #7dd3fc; font-size: 0.8rem; }
-
-    /* Views */
-    #parent-view, #coach-view { display: none; }
+    :root {
+      --bg-navy: #0A1128;
+      --card-navy: #1C2541;
+      --accent-red: #E63946;
+      --accent-cyan: #00F2FE;
+    }
+    body {
+      background-color: var(--bg-navy);
+      color: #F8FAFC;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .red-glow {
+      box-shadow: 0 0 15px rgba(230, 57, 70, 0.25);
+    }
+    .cyan-glow {
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0A1128;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1C2541;
+      border-radius: 3px;
+    }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col custom-scrollbar">
 
-  <!-- ========================================== -->
-  <!-- LOGIN VIEW -->
-  <!-- ========================================== -->
-  <div id="login-view">
-    <img src="1000006283_2.png" alt="Travis Henderson Coaching Logo" class="login-logo" />
-    <h2 style="color: #00c2ff; font-size: 1.2rem; margin-bottom: 4px;">Player Portal</h2>
-    <p style="color: #8e9bb0; font-size: 0.85rem; margin-bottom: 24px;">Login to access your dashboard</p>
-
-    <div class="auth-toggle">
-      <button class="auth-btn active" id="btn-login-parent" onclick="toggleLoginType('parent')">Parent</button>
-      <button class="auth-btn" id="btn-login-coach" onclick="toggleLoginType('coach')">Coach</button>
-    </div>
-
-    <!-- Parent Login Form -->
-    <div id="form-login-parent">
-      <div class="form-group">
-        <label>Select Player</label>
-        <select id="loginPlayerSelect"></select>
-      </div>
-      <div class="form-group">
-        <label>Passcode</label>
-        <input type="password" id="loginParentPasscode" placeholder="Enter parent passcode" />
-      </div>
-      <button class="btn-submit" onclick="loginParent()">Login as Parent</button>
-    </div>
-
-    <!-- Coach Login Form -->
-    <div id="form-login-coach" style="display: none;">
-      <div class="form-group">
-        <label>Coach Password</label>
-        <input type="password" id="loginCoachPasscode" placeholder="Enter coach password (demo: coach123)" />
-      </div>
-      <button class="btn-submit" onclick="loginCoach()">Login as Head Coach</button>
-    </div>
-    
-    <p id="loginError" style="color: #ff3b00; font-size: 0.8rem; margin-top: 12px; display: none;">Invalid credentials.</p>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- PARENT DASHBOARD -->
-  <!-- ========================================== -->
-  <div id="parent-view" class="container">
-    <header>
-      <div class="brand-container">
-        <img src="1000006283_2.png" alt="Logo" class="brand-logo" />
+  <!-- Top Navigation Header with Custom Branding -->
+  <header class="bg-[#1C2541] border-b border-slate-700/60 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <!-- Coaching Logo Badge -->
+        <div class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-slate-900 border-2 border-cyan-400/50 p-1 flex items-center justify-center overflow-hidden shadow-md">
+          <span class="font-black text-cyan-400 text-lg sm:text-xl tracking-tighter">TH</span>
+        </div>
         <div>
-          <h1 id="parentWelcomeName">Welcome, Parent</h1>
-          <p class="subtitle">Travis Henderson Professional Cricket Coaching</p>
+          <h1 class="font-bold text-base sm:text-lg tracking-wide text-white leading-tight">TRAVIS HENDERSON</h1>
+          <p class="text-[10px] sm:text-xs text-red-500 font-bold tracking-widest uppercase flex items-center gap-1">
+            <span>Professional Cricket Coaching</span>
+          </p>
         </div>
       </div>
-      <button class="btn-logout" onclick="logout()">Log Out</button>
-    </header>
 
-    <div class="grid-parent">
-      <!-- Left Column: Profile, Financials & Complete Parent Stats -->
-      <div>
-        <!-- Edit Profile Card -->
-        <div class="card">
-          <div class="card-title">Player Profile</div>
-          <div class="card-subtitle">Manage details & profile photo</div>
-          
-          <div class="profile-upload-container">
-            <img id="parentProfileImgPreview" src="" class="profile-img-preview" alt="Profile" onerror="this.style.backgroundColor='#1a2436'" />
-            <div class="file-input-wrapper">
-              <button class="btn-outline">Upload Photo</button>
-              <input type="file" id="profileImageInput" accept="image/*" onchange="previewImage(event)" />
-            </div>
-          </div>
+      <!-- View Switcher (Coach vs Parent View) -->
+      <div class="flex items-center space-x-1 sm:space-x-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-700">
+        <button id="btn-coach-view" onclick="switchRole('coach')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-red-600 text-white shadow">
+          Coach Dashboard
+        </button>
+        <button id="btn-parent-view" onclick="switchRole('parent')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white">
+          Parent View
+        </button>
+      </div>
+    </div>
+  </header>
 
-          <div class="form-group">
-            <label>Date of Birth</label>
-            <input type="date" id="parentDobInput" />
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ========================================================= -->
+    <!-- COACH DASHBOARD VIEW -->
+    <!-- ========================================================= -->
+    <div id="coach-view" class="space-y-6">
+      
+      <!-- Quick Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-400">Total Players</p>
+            <p class="text-2xl font-bold text-white mt-1">28</p>
           </div>
-          <button class="btn-submit" style="padding: 8px; font-size: 0.85rem;" onclick="saveParentProfile()">Save Profile</button>
+          <div class="p-2.5 bg-red-500/10 text-red-500 rounded-lg">
+            <i data-lucide="users" class="w-6 h-6"></i>
+          </div>
         </div>
-
-        <!-- Invoice Balance Card -->
-        <div class="invoice-card">
-          <label style="color: #ff3b00; font-weight: 600;">Outstanding Invoice Balance</label>
-          <div class="invoice-val" id="parentInvoiceDisplay">R 0.00</div>
-          <div style="font-size: 0.7rem; color: #fca5a5; margin-top: 2px;">Please process payment before the next session.</div>
+        <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-400">New Match Submissions</p>
+            <p class="text-2xl font-bold text-cyan-400 mt-1">6</p>
+          </div>
+          <div class="p-2.5 bg-cyan-500/10 text-cyan-400 rounded-lg">
+            <i data-lucide="file-check" class="w-6 h-6"></i>
+          </div>
         </div>
-
-        <!-- Parent Stats Overview Panel -->
-        <div class="card">
-          <div class="card-title">Season Overview & Metrics</div>
-          
-          <!-- Batting Metrics -->
-          <div class="section-title">Batting Metrics</div>
-          <div class="grid-3" style="margin-bottom: 12px;">
-            <div class="stat-card"><label>Runs</label><div class="stat-val" id="parentRuns">0</div></div>
-            <div class="stat-card"><label>High Score</label><div class="stat-val" id="parentHS">0</div></div>
-            <div class="stat-card"><label>Average</label><div class="stat-val" id="parentBatAvg">0.0</div></div>
-            <div class="stat-card"><label>Strike Rate</label><div class="stat-val" id="parentBatSR">0.0</div></div>
+        <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-400">Video Clips Uploaded</p>
+            <p class="text-2xl font-bold text-amber-400 mt-1">14</p>
           </div>
-
-          <!-- Bowling Metrics -->
-          <div class="section-title">Bowling Metrics</div>
-          <div class="grid-3" style="margin-bottom: 12px;">
-            <div class="stat-card"><label>Wickets</label><div class="stat-val" id="parentWickets">0</div></div>
-            <div class="stat-card"><label>Overs</label><div class="stat-val" id="parentOvers">0.0</div></div>
-            <div class="stat-card"><label>Maidens</label><div class="stat-val" id="parentMaidens">0</div></div>
-            <div class="stat-card"><label>B. Average</label><div class="stat-val" id="parentBowlAvg">0.0</div></div>
-            <div class="stat-card"><label>B. Strike Rate</label><div class="stat-val" id="parentBowlSR">0.0</div></div>
-            <div class="stat-card"><label>Economy</label><div class="stat-val" id="parentEcon">0.0</div></div>
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-lg">
+            <i data-lucide="video" class="w-6 h-6"></i>
           </div>
-
-          <!-- Fielding Metrics -->
-          <div class="section-title">Fielding Involvements</div>
-          <div class="grid-3">
-            <div class="stat-card"><label>Catches Held</label><div class="stat-val" id="parentCatches">0</div></div>
-            <div class="stat-card"><label>Catches Dropped</label><div class="stat-val" id="parentDrops" style="color:#ff3b00;">0</div></div>
-            <div class="stat-card"><label>Run Outs</label><div class="stat-val" id="parentRunOuts">0</div></div>
+        </div>
+        <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-400">Active Season</p>
+            <p class="text-2xl font-bold text-white mt-1">2026/27</p>
           </div>
-
-          <!-- Analytical Trends -->
-          <div class="section-title">Analytical Trends</div>
-          <div class="trend-box" id="parentTrendText">
-            <strong>Coach Note:</strong> Strong performance consistency on full deliveries.
+          <div class="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-lg">
+            <i data-lucide="calendar" class="w-6 h-6"></i>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Full Post-Match Logging Form -->
-      <div class="card">
-        <div class="card-title">Post-Match Data Entry</div>
-        <div class="card-subtitle">Fast, structured entry for Coach Travis's analytics engine</div>
-
-        <form id="matchForm">
-          <div class="form-group">
-            <label>Match Date</label>
-            <input type="date" value="2026-09-28" required />
+      <!-- Recent Highlight Performances (Coach Summary Banner) -->
+      <div class="bg-gradient-to-r from-[#1C2541] via-[#16203A] to-[#1C2541] p-5 rounded-xl border border-red-500/40 red-glow">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="award" class="w-5 h-5 text-red-500"></i>
+            <h2 class="font-bold text-lg text-white">Notable Recent Performances</h2>
+          </div>
+          <span class="text-xs text-slate-400 hidden sm:inline">Calculated from submitted parent match data</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="bg-slate-900/70 p-3.5 rounded-lg border border-slate-700/50 flex justify-between items-center">
+            <div>
+              <p class="font-semibold text-white text-sm">David Miller</p>
+              <p class="text-xs text-cyan-400 font-bold mt-0.5">74 runs off 61 balls</p>
+              <p class="text-[11px] text-slate-400">vs Oudtshoorn High (50 Over)</p>
+            </div>
+            <button onclick="shareHighlight('David Miller', '74 runs off 61 balls')" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 px-2.5 py-1.5 rounded border border-red-500/30 transition flex items-center gap-1">
+              <i data-lucide="share-2" class="w-3 h-3"></i> Draft Post
+            </button>
           </div>
 
-          <!-- 1. Batting Details -->
-          <div class="section-title">1. Batting Performance</div>
-          <div class="row form-group">
-            <div><label>Runs Scored</label><input type="number" placeholder="0" /></div>
-            <div><label>Balls Faced</label><input type="number" placeholder="0" /></div>
+          <div class="bg-slate-900/70 p-3.5 rounded-lg border border-slate-700/50 flex justify-between items-center">
             <div>
-              <label>Status</label>
-              <select>
-                <option>Out</option>
-                <option>Not Out</option>
-                <option>Retired</option>
+              <p class="font-semibold text-white text-sm">Cameron Stander</p>
+              <p class="text-xs text-cyan-400 font-bold mt-0.5">5/20 from 8.0 Overs</p>
+              <p class="text-[11px] text-slate-400">vs Oakdale U19 (50 Over)</p>
+            </div>
+            <button onclick="shareHighlight('Cameron Stander', '5 wickets for 20 runs')" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 px-2.5 py-1.5 rounded border border-red-500/30 transition flex items-center gap-1">
+              <i data-lucide="share-2" class="w-3 h-3"></i> Draft Post
+            </button>
+          </div>
+
+          <div class="bg-slate-900/70 p-3.5 rounded-lg border border-slate-700/50 flex justify-between items-center">
+            <div>
+              <p class="font-semibold text-white text-sm">Liam Kotze</p>
+              <p class="text-xs text-cyan-400 font-bold mt-0.5">42 (35) & 2 Catches</p>
+              <p class="text-[11px] text-slate-400">vs York High T20</p>
+            </div>
+            <button onclick="shareHighlight('Liam Kotze', '42 runs & 2 catches')" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 px-2.5 py-1.5 rounded border border-red-500/30 transition flex items-center gap-1">
+              <i data-lucide="share-2" class="w-3 h-3"></i> Draft Post
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Section: Player Roster & Full Player Profile -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left Column: Search & Player Roster -->
+        <div class="bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> Academy Roster
+            </h3>
+            <span class="text-xs text-slate-400">Select player</span>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="space-y-2">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+              <input type="text" placeholder="Search player name..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
+            </div>
+            <div class="flex gap-2">
+              <select class="w-1/2 bg-slate-900/80 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-300">
+                <option>All Formats</option>
+                <option>50 Over</option>
+                <option>T20</option>
+              </select>
+              <select class="w-1/2 bg-slate-900/80 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-300">
+                <option>2026/27 Season</option>
+                <option>2025/26 Season</option>
               </select>
             </div>
           </div>
 
-          <div class="row form-group">
+          <!-- Player List -->
+          <div class="space-y-2 max-h-[460px] overflow-y-auto custom-scrollbar pr-1">
+            <div onclick="selectPlayer('David Miller')" class="p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg border border-red-500/50 cursor-pointer transition flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-white">David Miller</p>
+                <p class="text-xs text-slate-400">Top-Order Batter • U17</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-cyan-400 block">38.5 Avg</span>
+                <span class="text-[10px] text-slate-500">12 Matches</span>
+              </div>
+            </div>
+
+            <div onclick="selectPlayer('Cameron Stander')" class="p-3 bg-slate-900/40 hover:bg-slate-800 rounded-lg border border-slate-800 hover:border-slate-700 cursor-pointer transition flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-white">Cameron Stander</p>
+                <p class="text-xs text-slate-400">Right-Arm Fast • U19</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-emerald-400 block">14.2 Econ</span>
+                <span class="text-[10px] text-slate-500">9 Matches</span>
+              </div>
+            </div>
+
+            <div onclick="selectPlayer('Liam Kotze')" class="p-3 bg-slate-900/40 hover:bg-slate-800 rounded-lg border border-slate-800 hover:border-slate-700 cursor-pointer transition flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-white">Liam Kotze</p>
+                <p class="text-xs text-slate-400">All-Rounder • U15</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-amber-400 block">28.0 Avg</span>
+                <span class="text-[10px] text-slate-500">14 Matches</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: FULL PLAYER PROFILE -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <div class="bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 space-y-6">
+            
+            <!-- Player Header Details -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-700/60 pb-4 gap-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 id="selected-player-name" class="text-xl font-bold text-white">David Miller</h3>
+                  <span class="px-2 py-0.5 bg-slate-800 border border-slate-700 text-[10px] text-slate-300 rounded font-semibold">U17 Squad</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Joined Academy: Oct 2024 • DOB: 12/04/2010 (Age 16)</p>
+              </div>
+              <div class="flex gap-2">
+                <span class="px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded text-xs font-medium">Right Hand Bat</span>
+                <span class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded text-xs font-medium">Right Arm Off-Break</span>
+              </div>
+            </div>
+
+            <!-- Career Overview Stats Card -->
             <div>
-              <label>Dismissal Mode</label>
-              <select>
-                <option>N/A (Not Out)</option>
-                <option>Bowled</option>
-                <option>Caught</option>
-                <option>LBW</option>
-                <option>Run Out</option>
-                <option>Stumped</option>
-              </select>
+              <p class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-cyan-400"></i> Career Statistics Breakdown
+              </p>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <div class="bg-slate-900/70 p-2.5 rounded-lg text-center border border-slate-800">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Innings</span>
+                  <span class="text-lg font-bold text-white">12</span>
+                </div>
+                <div class="bg-slate-900/70 p-2.5 rounded-lg text-center border border-slate-800">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Total Runs</span>
+                  <span class="text-lg font-bold text-cyan-400">385</span>
+                </div>
+                <div class="bg-slate-900/70 p-2.5 rounded-lg text-center border border-slate-800">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Batting Avg</span>
+                  <span class="text-lg font-bold text-white">38.5</span>
+                </div>
+                <div class="bg-slate-900/70 p-2.5 rounded-lg text-center border border-slate-800">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Strike Rate</span>
+                  <span class="text-lg font-bold text-white">121.8</span>
+                </div>
+                <div class="bg-slate-900/70 p-2.5 rounded-lg text-center border border-slate-800">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 block">50s / 100s</span>
+                  <span class="text-lg font-bold text-red-500">3 / 0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Technical Pattern Analysis (50% Threshold Rules) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800">
+                <p class="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
+                  <span>Dismissal Distribution</span>
+                  <span class="text-[10px] text-slate-500">Last 10 Matches</span>
+                </p>
+                <div class="h-44 flex items-center justify-center">
+                  <canvas id="dismissalChart"></canvas>
+                </div>
+              </div>
+
+              <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-semibold text-red-400 flex items-center gap-1.5">
+                      <i data-lucide="alert-circle" class="w-4 h-4"></i> Technical Pattern Flag
+                    </p>
+                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">50%+ Threshold Met</span>
+                  </div>
+                  <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                    <strong class="text-white">Outside Off-Stump Tendency:</strong> 60% of recent dismissals were caused by a <strong>Good Delivery</strong> on a <strong>Full Length Outside Off</strong>.
+                  </p>
+                  <div class="bg-slate-800/80 p-2.5 rounded border border-slate-700/60 text-xs text-slate-400 space-y-1.5">
+                    <div class="flex justify-between">
+                      <span>Got Self Out vs Good Ball:</span>
+                      <span class="text-red-400 font-semibold">60% Good Ball</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Delivery Line:</span>
+                      <span class="text-slate-200 font-medium">Outside Off (65%)</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Shot Attempted:</span>
+                      <span class="text-slate-200 font-medium">Cover Drive / Drive (50%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-slate-800">
+                  <span class="text-[10px] text-slate-500 uppercase tracking-wider block">Coaching Direction</span>
+                  <p class="text-xs text-slate-300 mt-0.5">Focus on off-side alignment, leaving the ball early, and front foot balance.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Clip Library (Max 10s Parent Uploads) -->
+            <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="video" class="w-4 h-4"></i> Player Video Library (Max 10s Clips)
+                </p>
+                <span class="text-[10px] text-slate-400">Submitted by Parent</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="bg-slate-800/90 p-3 rounded-lg border border-slate-700/60 flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                      <i data-lucide="play" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-white">Cover Drive Dismissal</p>
+                      <p class="text-[10px] text-slate-400">Match vs Outeniqua • 8.2s</p>
+                    </div>
+                  </div>
+                  <button onclick="alert('Playing 8-second match video clip for David Miller...')" class="text-[11px] bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1 rounded transition">Watch</button>
+                </div>
+
+                <div class="bg-slate-800/90 p-3 rounded-lg border border-slate-700/60 flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                      <i data-lucide="play" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-white">74 Runs Inning Highlights</p>
+                      <p class="text-[10px] text-slate-400">Match vs Oudtshoorn • 9.8s</p>
+                    </div>
+                  </div>
+                  <button onclick="alert('Playing 9.8-second match video clip for David Miller...')" class="text-[11px] bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1 rounded transition">Watch</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- PARENT MOBILE-FIRST VIEW -->
+    <!-- ========================================================= -->
+    <div id="parent-view" class="hidden max-w-lg mx-auto space-y-5">
+      
+      <!-- Parent Header Card -->
+      <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between shadow-md">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 border border-cyan-400/40 flex items-center justify-center font-bold text-cyan-400 text-sm">
+            TH
+          </div>
+          <div>
+            <p class="text-xs text-slate-400">Parent Portal</p>
+            <p class="font-bold text-white text-sm">Mr. Mark Miller</p>
+          </div>
+        </div>
+        <span class="text-[10px] bg-red-500/10 text-red-400 border border-red-500/30 px-2.5 py-1 rounded-full font-medium">Child: David Miller</span>
+      </div>
+
+      <!-- Match Performance Submission Form -->
+      <div class="bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 space-y-4">
+        <div class="border-b border-slate-700/60 pb-3">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5 text-red-500"></i> Add Match Performance
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Submit match figures & clips for David Miller</p>
+        </div>
+
+        <form id="match-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+          
+          <!-- Date and Format -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1 font-medium">Match Date</label>
+              <input type="date" required value="2026-09-28" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
             </div>
             <div>
-              <label>Type of Bowler Faced</label>
-              <select>
-                <option>Right-Arm Fast / Medium</option>
-                <option>Left-Arm Fast / Medium</option>
-                <option>Off-Spin</option>
-                <option>Leg-Spin</option>
-                <option>Left-Arm Orthodox Spin</option>
+              <label class="block text-xs text-slate-300 mb-1 font-medium">Format</label>
+              <select class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
+                <option>50 Over</option>
+                <option>T20</option>
+                <option>Two-Day</option>
+                <option>Other</option>
               </select>
             </div>
           </div>
 
-          <div class="row form-group">
-            <div>
-              <label>Catching Position (If caught)</label>
-              <select>
-                <option>N/A</option>
-                <option>Slip / Gully</option>
-                <option>Cover / Mid-Off Ring</option>
-                <option>Mid-Wicket / Square Leg</option>
-                <option>Deep Boundary</option>
-                <option>Wicketkeeper</option>
-              </select>
+          <div>
+            <label class="block text-xs text-slate-300 mb-1 font-medium">Opposition / Team</label>
+            <input type="text" placeholder="e.g. Outeniqua High U17" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
+          </div>
+
+          <!-- Activity Selectors -->
+          <div>
+            <label class="block text-xs text-slate-300 mb-2 font-medium">Player Match Activities</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="bg-slate-900 p-2.5 rounded-lg border border-slate-700 flex items-center space-x-2 cursor-pointer text-xs text-slate-300">
+                <input type="checkbox" checked id="chk-batted" onchange="toggleSection('sec-batting', this.checked)" class="accent-red-500">
+                <span>Batted</span>
+              </label>
+              <label class="bg-slate-900 p-2.5 rounded-lg border border-slate-700 flex items-center space-x-2 cursor-pointer text-xs text-slate-300">
+                <input type="checkbox" id="chk-bowled" onchange="toggleSection('sec-bowling', this.checked)" class="accent-red-500">
+                <span>Bowled</span>
+              </label>
+              <label class="bg-slate-900 p-2.5 rounded-lg border border-slate-700 flex items-center space-x-2 cursor-pointer text-xs text-slate-300">
+                <input type="checkbox" checked id="chk-fielded" onchange="toggleSection('sec-fielding', this.checked)" class="accent-red-500">
+                <span>Fielded</span>
+              </label>
             </div>
-            <div>
-              <label>Delivery Line</label>
-              <select>
-                <option>Outside Off</option>
-                <option>Stumps / Straight</option>
-                <option>Down Leg</option>
+          </div>
+
+          <!-- Batting Input Block -->
+          <div id="sec-batting" class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5"></i> Batting Performance
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Runs Scored</label>
+                <input type="number" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Balls Faced</label>
+                <input type="number" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Dismissal Status</label>
+                <select id="dismissal-select" onchange="toggleDismissalDetails(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+                  <option value="Not Out">Not Out</option>
+                  <option value="Caught">Caught</option>
+                  <option value="Bowled">Bowled</option>
+                  <option value="LBW">LBW</option>
+                  <option value="Run Out">Run Out</option>
+                  <option value="Stumped">Stumped</option>
+                </select>
+              </div>
+              <div id="field-bowler-type" class="hidden">
+                <label class="block text-xs text-slate-400 mb-1">Bowler Type</label>
+                <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+                  <option>Unknown</option>
+                  <option>Right Arm Pace</option>
+                  <option>Left Arm Pace</option>
+                  <option>Right Arm Spin</option>
+                  <option>Left Arm Spin</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Granular Details including Good Ball vs Got Self Out -->
+            <div id="dismissal-details" class="hidden space-y-2 pt-2 border-t border-slate-800">
+              <div class="grid grid-cols-1 gap-2">
+                <div>
+                  <label class="block text-[11px] text-amber-400 font-semibold mb-1">Dismissal Context (Batting)</label>
+                  <select class="w-full bg-slate-800 border border-amber-500/40 rounded px-2 py-1.5 text-xs text-white">
+                    <option>Good Ball / Great Delivery</option>
+                    <option>Got Self Out / Poor Shot Selection</option>
+                    <option>Unlucky / Freak Dismissal</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <div>
+                  <label class="block text-[10px] text-slate-400 mb-0.5">Line of Delivery</label>
+                  <select class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[11px] text-white">
+                    <option>Outside Off</option>
+                    <option>Wide Outside Off</option>
+                    <option>Off Stump</option>
+                    <option>Middle / Leg</option>
+                    <option>Down Leg</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] text-slate-400 mb-0.5">Length</label>
+                  <select class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[11px] text-white">
+                    <option>Full / Drive Length</option>
+                    <option>Good Length</option>
+                    <option>Back of Length</option>
+                    <option>Short / Bouncer</option>
+                    <option>Yorker</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bowling Input Block -->
+          <div id="sec-bowling" class="hidden bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i> Bowling Performance
+            </h3>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Overs</label>
+                <input type="number" step="0.1" placeholder="4.0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Runs</label>
+                <input type="number" placeholder="25" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Wickets</label>
+                <input type="number" placeholder="2" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+              </div>
+            </div>
+
+            <!-- Bowling Wicket Context Selector -->
+            <div class="pt-2 border-t border-slate-800">
+              <label class="block text-[11px] text-amber-400 font-semibold mb-1">Wicket Context (Bowling)</label>
+              <select class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+                <option>Good Ball / Earned Wicket</option>
+                <option>Bad Ball / Batter Gave Wicket Away</option>
+                <option>Mixed / Standard</option>
               </select>
             </div>
           </div>
 
-          <div class="row form-group">
-            <div>
-              <label>Delivery Length</label>
-              <select>
-                <option>Full Pitch Up</option>
-                <option>Good Length</option>
-                <option>Short / Bouncer</option>
-                <option>Yorker / Full Toss</option>
-              </select>
-            </div>
-            <div>
-              <label>Assessment</label>
-              <select>
-                <option>Unforced Error (Got self out)</option>
-                <option>Good Ball (Forced Error)</option>
-              </select>
+          <!-- Fielding Input Block -->
+          <div id="sec-fielding" class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="hand" class="w-3.5 h-3.5"></i> Fielding
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Catches Taken</label>
+                <input type="number" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Run Outs / Direct Hits</label>
+                <input type="number" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              </div>
             </div>
           </div>
 
-          <!-- 2. Bowling Details -->
-          <div class="section-title">2. Bowling Details</div>
-          <div class="row form-group">
-            <div><label>Overs Bowled</label><input type="number" step="0.1" placeholder="0.0" /></div>
-            <div><label>Maidens</label><input type="number" placeholder="0" /></div>
-            <div><label>Runs Conceded</label><input type="number" placeholder="0" /></div>
-            <div><label>Wickets Taken</label><input type="number" placeholder="0" /></div>
+          <!-- Video Clip Attachment (Max 10s) -->
+          <div class="bg-amber-500/10 p-4 rounded-xl border border-amber-500/30 space-y-2">
+            <label class="block text-xs font-bold text-amber-400 flex items-center justify-between">
+              <span class="flex items-center gap-1.5"><i data-lucide="video" class="w-4 h-4"></i> Upload Match Video Clip</span>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">Max 10 Sec</span>
+            </label>
+            <input type="file" accept="video/*" class="w-full text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer">
+            <p class="text-[10px] text-slate-400">Attach a short video (shot, dismissal, or wicket ball) for Coach Travis to review.</p>
           </div>
 
-          <!-- 3. Fielding Involvements -->
-          <div class="section-title">3. Fielding Involvements</div>
-          <div class="row form-group">
-            <div><label>Catches Held</label><input type="number" placeholder="0" /></div>
-            <div><label>Catches Dropped</label><input type="number" placeholder="0" /></div>
-            <div><label>Run Out Involvements</label><input type="number" placeholder="0" /></div>
-          </div>
-
-          <button type="button" class="btn-submit" onclick="alert('Match entry successfully submitted to Coach Travis!')">Submit Match Entry</button>
+          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Submit Match Performance
+          </button>
         </form>
       </div>
-    </div>
-  </div>
 
-  <!-- ========================================== -->
-  <!-- COACH DASHBOARD -->
-  <!-- ========================================== -->
-  <div id="coach-view" class="container">
-    <header>
-      <div class="brand-container">
-        <img src="1000006283_2.png" alt="Logo" class="brand-logo" />
-        <div>
-          <h1>Coach Dashboard</h1>
-          <p class="subtitle">Travis Henderson Professional Cricket Coaching - Admin</p>
-        </div>
-      </div>
-      <button class="btn-logout" onclick="logout()">Log Out</button>
-    </header>
-
-    <div class="grid-2">
-      <!-- Player Roster Generator -->
-      <div class="card">
-        <div class="card-title">Add New Player</div>
-        <div class="card-subtitle">Creates player profile & parent passcode entry</div>
-        <div class="row form-group">
-          <div>
-            <label>Player Full Name</label>
-            <input type="text" id="newPlayerName" placeholder="e.g. Liam Smith" />
-          </div>
-          <div>
-            <label>Parent Passcode</label>
-            <input type="text" id="newPlayerPasscode" placeholder="e.g. 1234" />
-          </div>
-        </div>
-        <div class="form-group" style="max-width: 50%;">
-          <label>Initial Invoice Amount (R)</label>
-          <input type="number" id="newPlayerInvoice" value="0" />
-        </div>
-        <button class="btn-submit" onclick="addNewPlayer()">Add Player to Roster</button>
-      </div>
-
-      <!-- Financial & Access Control Management -->
-      <div class="card">
-        <div class="card-title">Manage Player Accounts & Passcodes</div>
-        <div class="card-subtitle">Control invoice balances, passcodes, or remove player profiles</div>
-        
-        <div class="form-group">
-          <label>Select Player</label>
-          <select id="coachPlayerSelect" onchange="loadCoachPlayerData()"></select>
-        </div>
-
-        <div class="row form-group">
-          <div>
-            <label>Parent Passcode</label>
-            <input type="text" id="coachPasscodeInput" />
-          </div>
-          <div>
-            <label>Outstanding Amount (R)</label>
-            <input type="number" id="coachInvoiceInput" />
-          </div>
-        </div>
-
-        <div class="row" style="margin-top: 16px;">
-          <button type="button" class="btn-outline" style="flex:2;" onclick="updateCoachPlayerData()">Save Changes</button>
-          <button type="button" class="btn-danger" style="flex:1;" onclick="deletePlayer()">Delete Player</button>
-        </div>
-      </div>
     </div>
 
-    <!-- INDIVIDUAL PLAYER HYPER-ANALYTICS BREAKDOWN -->
-    <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #1a2436; padding-bottom: 12px; margin-bottom: 16px;">
-        <div>
-          <div class="card-title" style="margin: 0;">Individual Player Breakdown & Tactical Trends</div>
-          <div class="card-subtitle" style="margin: 0;">Select a player to analyze specific biomechanical & strategic metrics</div>
-        </div>
-        <div style="min-width: 220px;">
-          <select id="coachBreakdownSelect" onchange="loadIndividualBreakdown()"></select>
-        </div>
-      </div>
+  </main>
 
-      <!-- Player Specific Stat Overview -->
-      <div class="grid-4" style="margin-top: 16px;">
-        <div class="stat-card">
-          <label>Control Index (CEI)</label>
-          <div class="stat-val" id="coachCEI">--</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Execution vs Forced errors</div>
-        </div>
-        <div class="stat-card">
-          <label>Unforced Error Rate</label>
-          <div class="stat-val" id="coachUnforcedRate" style="color: #ff3b00;">--</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Soft dismissals frequency</div>
-        </div>
-        <div class="stat-card">
-          <label>Boundary Rate</label>
-          <div class="stat-val" id="coachBoundaryRate" style="color: #fff;">--</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Boundary ball % faced</div>
-        </div>
-        <div class="stat-card">
-          <label>Primary Vulnerability</label>
-          <div class="stat-val" id="coachPrimaryVuln" style="font-size: 1.1rem; color: #00c2ff;">--</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Delivery zone weakness</div>
-        </div>
-      </div>
-
-      <!-- Editable Analytical Notes -->
-      <div class="form-group" style="margin-top: 16px;">
-        <label>Analytical Trends & Coach Feedback Notes (Visible to Parents)</label>
-        <textarea id="coachTrendNoteInput" rows="3" placeholder="Enter custom tactical trend notes for this player..."></textarea>
-        <button type="button" class="btn-outline" style="margin-top: 8px; width: auto;" onclick="saveTrendNote()">Save Trend Notes</button>
-      </div>
-
-      <!-- Player Charts -->
-      <div class="grid-2" style="margin-top: 24px;">
-        <div>
-          <div class="section-title">Dismissal Vulnerability by Length</div>
-          <div style="height: 200px;"><canvas id="lengthChart"></canvas></div>
-        </div>
-        <div>
-          <div class="section-title">Wicket Quality / Wicket Cause Index</div>
-          <div style="height: 200px;"><canvas id="qualityChart"></canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT LOGIC -->
-  <!-- ========================================== -->
+  <!-- Application Logic JavaScript -->
   <script>
-    // Database Structure
-    let players = {
-      "player_1": { 
-        name: "John Doe", 
-        passcode: "1234", 
-        dob: "2008-04-12", 
-        photo: "", 
-        invoice: 1250, 
-        runs: 384,
-        highestScore: 88,
-        battingAvg: 38.4,
-        strikeRate: 130.2,
-        catches: 8,
-        drops: 1,
-        runOuts: 3,
-        wickets: 19,
-        overs: 42.0,
-        maidens: 6,
-        bowlingAvg: 14.2,
-        bowlingSR: 13.2,
-        economy: 6.45,
-        cei: "78.2%",
-        unforcedRate: "21.8%",
-        boundaryRate: "18.5%",
-        primaryVuln: "Full Pitch Up",
-        lengthData: [10, 15, 55, 20],
-        qualityData: [15, 4],
-        trend: "Strong performance against spin bowlers. Front-foot drive control is high (78%)."
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Chart.js Setup
+    const ctx = document.getElementById('dismissalChart').getContext('2d');
+    const dismissalChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Caught (Outside Off)', 'Bowled', 'LBW', 'Caught (Other)', 'Not Out'],
+        datasets: [{
+          data: [6, 2, 1, 1, 2],
+          backgroundColor: ['#E63946', '#00F2FE', '#3B82F6', '#A855F7', '#10B981'],
+          borderWidth: 0
+        }]
       },
-      "player_2": { 
-        name: "Jane Smith", 
-        passcode: "5678", 
-        dob: "2010-05-14", 
-        photo: "", 
-        invoice: 850, 
-        runs: 154,
-        highestScore: 42,
-        battingAvg: 22.0,
-        strikeRate: 98.5,
-        catches: 4,
-        drops: 2,
-        runOuts: 1,
-        wickets: 8,
-        overs: 20.0,
-        maidens: 2,
-        bowlingAvg: 18.5,
-        bowlingSR: 15.0,
-        economy: 7.40,
-        cei: "64.0%",
-        unforcedRate: "36.0%",
-        boundaryRate: "12.1%",
-        primaryVuln: "Short / Bouncer",
-        lengthData: [50, 25, 15, 10],
-        qualityData: [8, 6],
-        trend: "Excellent bowling accuracy on good length deliveries. Working on shortening seam release position."
-      }
-    };
-    
-    let currentUserId = null;
-    let lengthChartInstance = null;
-    let qualityChartInstance = null;
-
-    // Initialization
-    function init() {
-      populatePlayerDropdowns();
-    }
-
-    function populatePlayerDropdowns() {
-      const loginSelect = document.getElementById('loginPlayerSelect');
-      const coachSelect = document.getElementById('coachPlayerSelect');
-      const coachBreakdownSelect = document.getElementById('coachBreakdownSelect');
-      
-      loginSelect.innerHTML = '';
-      coachSelect.innerHTML = '';
-      coachBreakdownSelect.innerHTML = '';
-      
-      for (const [id, data] of Object.entries(players)) {
-        loginSelect.options.add(new Option(data.name, id));
-        coachSelect.options.add(new Option(data.name, id));
-        coachBreakdownSelect.options.add(new Option(data.name, id));
-      }
-      
-      if (Object.keys(players).length > 0) {
-        loadCoachPlayerData();
-        loadIndividualBreakdown();
-      }
-    }
-
-    // Login Navigation
-    function toggleLoginType(type) {
-      document.getElementById('btn-login-parent').classList.remove('active');
-      document.getElementById('btn-login-coach').classList.remove('active');
-      document.getElementById(`btn-login-${type}`).classList.add('active');
-
-      if (type === 'parent') {
-        document.getElementById('form-login-parent').style.display = 'block';
-        document.getElementById('form-login-coach').style.display = 'none';
-      } else {
-        document.getElementById('form-login-parent').style.display = 'none';
-        document.getElementById('form-login-coach').style.display = 'block';
-      }
-      document.getElementById('loginError').style.display = 'none';
-    }
-
-    function loginParent() {
-      const selectedId = document.getElementById('loginPlayerSelect').value;
-      const passcode = document.getElementById('loginParentPasscode').value;
-      
-      if (players[selectedId] && players[selectedId].passcode === passcode) {
-        currentUserId = selectedId;
-        loadParentDashboard();
-        switchView('parent-view');
-      } else {
-        showError('Invalid passcode for the selected player.');
-      }
-    }
-
-    function loginCoach() {
-      const passcode = document.getElementById('loginCoachPasscode').value;
-      if (passcode === 'coach123') {
-        switchView('coach-view');
-        loadIndividualBreakdown();
-      } else {
-        showError('Invalid coach password.');
-      }
-    }
-
-    function showError(msg) {
-      const err = document.getElementById('loginError');
-      err.innerText = msg;
-      err.style.display = 'block';
-    }
-
-    function logout() {
-      currentUserId = null;
-      document.getElementById('loginParentPasscode').value = '';
-      document.getElementById('loginCoachPasscode').value = '';
-      document.getElementById('loginError').style.display = 'none';
-      switchView('login-view');
-    }
-
-    function switchView(viewId) {
-      document.getElementById('login-view').style.display = 'none';
-      document.getElementById('parent-view').style.display = 'none';
-      document.getElementById('coach-view').style.display = 'none';
-      document.getElementById(viewId).style.display = 'block';
-    }
-
-    // Load Data into Parent Dashboard
-    function loadParentDashboard() {
-      const data = players[currentUserId];
-      document.getElementById('parentWelcomeName').innerText = `${data.name}'s Dashboard`;
-      document.getElementById('parentInvoiceDisplay').innerText = `R ${data.invoice.toFixed(2)}`;
-      document.getElementById('parentDobInput').value = data.dob || '';
-      document.getElementById('parentProfileImgPreview').src = data.photo || '';
-      
-      // Populate Stats
-      document.getElementById('parentRuns').innerText = data.runs;
-      document.getElementById('parentHS').innerText = data.highestScore;
-      document.getElementById('parentBatAvg').innerText = data.battingAvg;
-      document.getElementById('parentBatSR').innerText = data.strikeRate;
-      
-      document.getElementById('parentWickets').innerText = data.wickets;
-      document.getElementById('parentOvers').innerText = data.overs;
-      document.getElementById('parentMaidens').innerText = data.maidens;
-      document.getElementById('parentBowlAvg').innerText = data.bowlingAvg;
-      document.getElementById('parentBowlSR').innerText = data.bowlingSR;
-      document.getElementById('parentEcon').innerText = data.economy;
-      
-      document.getElementById('parentCatches').innerText = data.catches;
-      document.getElementById('parentDrops').innerText = data.drops;
-      document.getElementById('parentRunOuts').innerText = data.runOuts;
-      
-      document.getElementById('parentTrendText').innerHTML = `<strong>Coach Note:</strong> ${data.trend}`;
-    }
-
-    function previewImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('parentProfileImgPreview').src = e.target.result;
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#94A3B8', font: { size: 10 } }
+          }
         }
-        reader.readAsDataURL(file);
+      }
+    });
+
+    // Toggle Role Views
+    function switchRole(role) {
+      const coachView = document.getElementById('coach-view');
+      const parentView = document.getElementById('parent-view');
+      const btnCoach = document.getElementById('btn-coach-view');
+      const btnParent = document.getElementById('btn-parent-view');
+
+      if (role === 'coach') {
+        coachView.classList.remove('hidden');
+        parentView.classList.add('hidden');
+        btnCoach.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-red-600 text-white shadow";
+        btnParent.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white";
+      } else {
+        coachView.classList.add('hidden');
+        parentView.classList.remove('hidden');
+        btnParent.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-red-600 text-white shadow";
+        btnCoach.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white";
       }
     }
 
-    function saveParentProfile() {
-      if (!currentUserId) return;
-      players[currentUserId].dob = document.getElementById('parentDobInput').value;
-      players[currentUserId].photo = document.getElementById('parentProfileImgPreview').src;
-      alert("Profile details successfully saved!");
-    }
-
-    // Coach Dashboard Actions
-    function addNewPlayer() {
-      const name = document.getElementById('newPlayerName').value.trim();
-      const passcode = document.getElementById('newPlayerPasscode').value.trim();
-      const invoice = parseFloat(document.getElementById('newPlayerInvoice').value) || 0;
-
-      if (!name || !passcode) {
-        alert("Please provide both a name and a passcode.");
-        return;
-      }
-
-      const newId = "player_" + Date.now();
-      players[newId] = {
-        name: name,
-        passcode: passcode,
-        dob: "",
-        photo: "",
-        invoice: invoice,
-        runs: 0,
-        highestScore: 0,
-        battingAvg: 0.0,
-        strikeRate: 0.0,
-        catches: 0,
-        drops: 0,
-        runOuts: 0,
-        wickets: 0,
-        overs: 0.0,
-        maidens: 0,
-        bowlingAvg: 0.0,
-        bowlingSR: 0.0,
-        economy: 0.0,
-        cei: "0.0%",
-        unforcedRate: "0.0%",
-        boundaryRate: "0.0%",
-        primaryVuln: "N/A",
-        lengthData: [0, 0, 0, 0],
-        qualityData: [0, 0],
-        trend: "New player added. Match data pending entry."
-      };
-
-      populatePlayerDropdowns();
-      
-      document.getElementById('newPlayerName').value = '';
-      document.getElementById('newPlayerPasscode').value = '';
-      document.getElementById('newPlayerInvoice').value = '0';
-      alert(`${name} added to roster successfully!`);
-    }
-
-    function loadCoachPlayerData() {
-      const selectedId = document.getElementById('coachPlayerSelect').value;
-      if (players[selectedId]) {
-        document.getElementById('coachInvoiceInput').value = players[selectedId].invoice;
-        document.getElementById('coachPasscodeInput').value = players[selectedId].passcode;
+    // Toggle Sections
+    function toggleSection(id, isChecked) {
+      const section = document.getElementById(id);
+      if (isChecked) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
       }
     }
 
-    function updateCoachPlayerData() {
-      const selectedId = document.getElementById('coachPlayerSelect').value;
-      const newAmount = parseFloat(document.getElementById('coachInvoiceInput').value) || 0;
-      const newPasscode = document.getElementById('coachPasscodeInput').value.trim();
-      
-      if (!newPasscode) {
-        alert("Passcode cannot be empty.");
-        return;
-      }
-
-      if (players[selectedId]) {
-        players[selectedId].invoice = newAmount;
-        players[selectedId].passcode = newPasscode;
-        alert(`Account for ${players[selectedId].name} updated!`);
+    // Dynamic Dismissal Details Selector
+    function toggleDismissalDetails(val) {
+      const details = document.getElementById('dismissal-details');
+      const bowlerType = document.getElementById('field-bowler-type');
+      if (val !== 'Not Out') {
+        details.classList.remove('hidden');
+        bowlerType.classList.remove('hidden');
+      } else {
+        details.classList.add('hidden');
+        bowlerType.classList.add('hidden');
       }
     }
 
-    function deletePlayer() {
-      const selectedId = document.getElementById('coachPlayerSelect').value;
-      if (!players[selectedId]) return;
-
-      const confirmDelete = confirm(`Are you sure you want to delete ${players[selectedId].name}? This cannot be undone.`);
-      if (confirmDelete) {
-        const deletedName = players[selectedId].name;
-        delete players[selectedId];
-        populatePlayerDropdowns();
-        alert(`${deletedName} removed from roster.`);
-      }
+    // Form Submission
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      alert("Match performance and video clip submitted for David Miller! Coach Dashboard & Video Library updated.");
+      switchRole('coach');
     }
 
-    // Individual Breakdown Engine
-    function loadIndividualBreakdown() {
-      const selectedId = document.getElementById('coachBreakdownSelect').value;
-      const p = players[selectedId];
-      if (!p) return;
-
-      document.getElementById('coachCEI').innerText = p.cei || "0%";
-      document.getElementById('coachUnforcedRate').innerText = p.unforcedRate || "0%";
-      document.getElementById('coachBoundaryRate').innerText = p.boundaryRate || "0%";
-      document.getElementById('coachPrimaryVuln').innerText = p.primaryVuln || "N/A";
-      document.getElementById('coachTrendNoteInput').value = p.trend || "";
-
-      renderIndividualCharts(p.lengthData || [0,0,0,0], p.qualityData || [0,0]);
+    // Select Player
+    function selectPlayer(name) {
+      document.getElementById('selected-player-name').innerText = name;
     }
 
-    function saveTrendNote() {
-      const selectedId = document.getElementById('coachBreakdownSelect').value;
-      if (players[selectedId]) {
-        players[selectedId].trend = document.getElementById('coachTrendNoteInput').value;
-        alert(`Trend note saved for ${players[selectedId].name}!`);
-      }
+    // Social Media Draft Generator
+    function shareHighlight(player, text) {
+      alert(`Draft Post for Facebook:\n\n"Great performance by ${player} at Travis Henderson Professional Cricket Coaching! ${text}. Keep working hard!"\n\n(Review and approve before sharing).`);
     }
-
-    function renderIndividualCharts(lengthData, qualityData) {
-      if (lengthChartInstance) lengthChartInstance.destroy();
-      if (qualityChartInstance) qualityChartInstance.destroy();
-
-      lengthChartInstance = new Chart(document.getElementById('lengthChart'), {
-        type: 'bar',
-        data: {
-          labels: ['Short', 'Good', 'Full', 'Yorker'],
-          datasets: [{ data: lengthData, backgroundColor: '#00a8e8', borderRadius: 4 }]
-        },
-        options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#1a2436' }, ticks: { color: '#8e9bb0' } }, y: { grid: { display: false }, ticks: { color: '#8e9bb0' } } } }
-      });
-
-      qualityChartInstance = new Chart(document.getElementById('qualityChart'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Good Delivery', 'Batter Error'],
-          datasets: [{ data: qualityData, backgroundColor: ['#00a8e8', '#ff3b00'], borderWidth: 0 }]
-        },
-        options: { plugins: { legend: { position: 'right', labels: { color: '#8e9bb0', font: {size: 10} } } } }
-      });
-    }
-
-    window.onload = init;
   </script>
 </body>
 </html>
