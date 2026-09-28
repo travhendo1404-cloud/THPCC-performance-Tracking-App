@@ -18,7 +18,7 @@
     header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .brand-container { display: flex; align-items: center; gap: 14px; }
     
-    /* Logo Placeholder / Image styling */
+    /* Logo Image Styling */
     .brand-logo { width: 48px; height: 48px; object-fit: contain; border-radius: 8px; background-color: #0f172a; padding: 4px; border: 1px solid #1e293b; }
     
     h1 { color: #10b981; font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
@@ -53,11 +53,17 @@
 
     .btn-submit { width: 100%; background-color: #10b981; color: #090d16; font-weight: 700; border: none; padding: 12px; border-radius: 10px; cursor: pointer; margin-top: 12px; transition: background 0.2s; }
     .btn-submit:hover { background-color: #34d399; }
+    .btn-update { background-color: #10b981; color: #090d16; font-weight: 700; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: background 0.2s; font-size: 0.8rem; }
+    .btn-update:hover { background-color: #34d399; }
 
     /* Stat Cards */
     .stat-card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; }
     .stat-val { font-size: 1.6rem; font-weight: 700; color: #10b981; margin-top: 4px; }
     .stat-desc { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+
+    /* Financial Highlight Badge */
+    .invoice-card { background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .invoice-val { font-size: 1.5rem; font-weight: 700; color: #ef4444; margin-top: 4px; }
 
     /* Alert Banner */
     .alert-box { background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; color: #fcd34d; font-size: 0.85rem; }
@@ -73,7 +79,7 @@
     <!-- Header with Branding & Logo -->
     <header>
       <div class="brand-container">
-        <!-- Replace 'logo.png' with your actual logo image path or URL -->
+        <!-- Logo Image Path -->
         <img src="logo.png" alt="Madibaz Logo" class="brand-logo" onerror="this.style.display='none'" />
         <div>
           <h1>Madibaz Youth Analytics</h1>
@@ -82,27 +88,27 @@
       </div>
 
       <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('parent', event)">Parent Entry & Summary</button>
+        <button class="tab-btn active" onclick="switchTab('parent', event)">Parent Portal</button>
         <button class="tab-btn" onclick="switchTab('coach', event)">Coach Hyper-Analytics</button>
       </div>
     </header>
 
     <!-- ========================================== -->
-    <!-- TAB 1: PARENT ENTRY FORM & BASIC DASHBOARD -->
+    <!-- TAB 1: PARENT PORTAL (LIMITED DATA & ENTRY)-->
     <!-- ========================================== -->
     <div id="parent-tab" class="tab-content active">
       <div class="grid-parent">
         
-        <!-- Input Form -->
+        <!-- Parent Match Entry Form -->
         <div class="card">
           <div class="card-title">Post-Match Parent Entry</div>
-          <div class="card-subtitle">Fast, 2-minute entry logging after match day</div>
+          <div class="card-subtitle">Fast, 2-minute match logging following fixture completion</div>
 
           <form id="matchForm">
             <div class="row form-group">
               <div>
                 <label>Player Name</label>
-                <input type="text" placeholder="e.g. Player Name" required />
+                <input type="text" id="parentPlayerNameInput" value="Player Name" required />
               </div>
               <div>
                 <label>Match Date</label>
@@ -113,7 +119,7 @@
             <!-- 1. Batting -->
             <div class="section-title">1. Batting Details</div>
             <div class="row form-group">
-              <div><label>Runs</label><input type="number" placeholder="0" /></div>
+              <div><label>Runs Scored</label><input type="number" placeholder="0" /></div>
               <div><label>Balls Faced</label><input type="number" placeholder="0" /></div>
               <div>
                 <label>Status</label>
@@ -178,10 +184,10 @@
             <!-- 2. Bowling -->
             <div class="section-title" style="margin-top: 16px;">2. Bowling Details</div>
             <div class="row form-group">
-              <div><label>Overs</label><input type="number" step="0.1" placeholder="4.0" /></div>
+              <div><label>Overs Bowled</label><input type="number" step="0.1" placeholder="4.0" /></div>
               <div><label>Maidens</label><input type="number" placeholder="0" /></div>
-              <div><label>Runs</label><input type="number" placeholder="0" /></div>
-              <div><label>Wickets</label><input type="number" placeholder="0" /></div>
+              <div><label>Runs Conceded</label><input type="number" placeholder="0" /></div>
+              <div><label>Wickets Taken</label><input type="number" placeholder="0" /></div>
             </div>
 
             <!-- 3. Fielding -->
@@ -192,15 +198,22 @@
               <div><label>Run Out Involvements</label><input type="number" placeholder="0" /></div>
             </div>
 
-            <button type="button" class="btn-submit" onclick="alert('Match Entry Saved!')">Submit Match Entry</button>
+            <button type="button" class="btn-submit" onclick="alert('Match entry saved successfully!')">Submit Match Entry</button>
           </form>
         </div>
 
-        <!-- Parent Summary Panel -->
+        <!-- Parent Summary Panel (Limited Public/Player Data View) -->
         <div>
+          <!-- Outstanding Invoice Card for Parent View -->
+          <div class="invoice-card">
+            <label style="color: #f87171; font-weight: 600;">Outstanding Invoice Balance</label>
+            <div class="invoice-val" id="parentInvoiceDisplay">R 1,250.00</div>
+            <div class="stat-desc" style="color: #fca5a5;">Please process outstanding fees before next match registration.</div>
+          </div>
+
           <div class="card">
-            <div class="card-title">Season Overview</div>
-            <div class="card-subtitle">Aggregated totals & performance rates</div>
+            <div class="card-title">Season Basic Overview</div>
+            <div class="card-subtitle">Aggregated totals & core performance rates</div>
 
             <div class="row" style="margin-bottom: 16px;">
               <div class="stat-card">
@@ -227,11 +240,34 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 2: COACH HYPER-ANALYTICS DASHBOARD    -->
+    <!-- TAB 2: COACH HYPER-ANALYTICS & FULL DATA  -->
     <!-- ========================================== -->
     <div id="coach-tab" class="tab-content">
       
-      <!-- Key Stat Ribbon -->
+      <!-- Financial Account Management for Head Coach -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-title">Player Account & Fee Management</div>
+        <div class="card-subtitle">Update outstanding invoice amounts for player profiles</div>
+        
+        <div class="row form-group" style="align-items: flex-end; max-width: 600px;">
+          <div>
+            <label>Select Player</label>
+            <select id="coachPlayerSelect" onchange="loadPlayerInvoiceData()">
+              <option value="Player Name">Player Name (U19 Academy)</option>
+              <option value="Junior Batter">Junior Batter (U15 Squad)</option>
+            </select>
+          </div>
+          <div>
+            <label>Outstanding Invoice Amount (Rands)</label>
+            <input type="number" id="coachInvoiceInput" value="1250" placeholder="0.00" />
+          </div>
+          <div>
+            <button type="button" class="btn-update" onclick="updateInvoiceBalance()">Save & Update Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Advanced Metric Ribbon (Full Coach View) -->
       <div class="grid-4">
         <div class="stat-card">
           <label>Control Index (CEI)</label>
@@ -255,13 +291,13 @@
         </div>
       </div>
 
-      <!-- Tactical Alert Banner -->
+      <!-- Advanced Tactical Alert Banner -->
       <div class="alert-box">
         <strong>Automated Tactical Insight for Head Coach:</strong><br/>
         50% of batter dismissals occur on <em>Full / Pitch-Up</em> deliveries targeted <em>Outside Off</em>, with 62% resulting in airborne catches in the Cover/Mid-Off ring. Recommended focus: front-foot driving mechanics & ground-hitting drills.
       </div>
 
-      <!-- Performance Charts -->
+      <!-- Full Performance Data Charts & Breakdown -->
       <div class="grid-2">
         
         <!-- Batting Dismissal Vulnerability Chart -->
@@ -283,12 +319,68 @@
         </div>
 
       </div>
+
+      <!-- Comprehensive Technical Metrics Table (Coach Exclusive Data) -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-title">Detailed Biomechanical & Strategic Breakdown</div>
+        <div class="card-subtitle">Granular player tracking metrics accessible exclusively on coach view</div>
+        
+        <div style="overflow-x: auto; margin-top: 12px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #1e293b; color: #10b981;">
+                <th style="padding: 10px;">Parameter</th>
+                <th style="padding: 10px;">Target Benchmark</th>
+                <th style="padding: 10px;">Current Season Value</th>
+                <th style="padding: 10px;">Status / Evaluation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 10px; color: #fff;">Boundary Percentage (%)</td>
+                <td style="padding: 10px; color: #94a3b8;">&gt; 18.0%</td>
+                <td style="padding: 10px; color: #fff;">21.4%</td>
+                <td style="padding: 10px; color: #10b981;">Optimal</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 10px; color: #fff;">Unforced Error Frequency</td>
+                <td style="padding: 10px; color: #94a3b8;">&lt; 15.0%</td>
+                <td style="padding: 10px; color: #fff;">27.5%</td>
+                <td style="padding: 10px; color: #ef4444;">Needs Technical Focus</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 10px; color: #fff;">Pace Release Consistency</td>
+                <td style="padding: 10px; color: #94a3b8;">&gt; 85.0%</td>
+                <td style="padding: 10px; color: #fff;">88.2%</td>
+                <td style="padding: 10px; color: #10b981;">High Precision</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; color: #fff;">Ground Fielding Efficiency</td>
+                <td style="padding: 10px; color: #94a3b8;">&gt; 90.0%</td>
+                <td style="padding: 10px; color: #fff;">92.0%</td>
+                <td style="padding: 10px; color: #10b981;">Strong Execution</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
-  <!-- Vanilla JavaScript Logic -->
+  <!-- JavaScript Logic -->
   <script>
+    // In-memory player database for demo/presentation setup
+    let playerData = {
+      "Player Name": {
+        invoiceBalance: 1250
+      },
+      "Junior Batter": {
+        invoiceBalance: 850
+      }
+    };
+
     // Tab Navigation Switcher
     function switchTab(tabName, evt) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -304,7 +396,30 @@
       }
     }
 
-    // Dynamic Chart rendering
+    // Function for coach to update outstanding invoice
+    function updateInvoiceBalance() {
+      const selectedPlayer = document.getElementById('coachPlayerSelect').value;
+      const newAmount = parseFloat(document.getElementById('coachInvoiceInput').value) || 0;
+      
+      if (!playerData[selectedPlayer]) {
+        playerData[selectedPlayer] = {};
+      }
+      playerData[selectedPlayer].invoiceBalance = newAmount;
+
+      // Update parent display dynamically
+      document.getElementById('parentInvoiceDisplay').innerText = `R ${newAmount.toFixed(2)}`;
+      alert(`Invoice balance for ${selectedPlayer} updated to R ${newAmount.toFixed(2)}.`);
+    }
+
+    // Function to load selected player's invoice into coach editor
+    function loadPlayerInvoiceData() {
+      const selectedPlayer = document.getElementById('coachPlayerSelect').value;
+      if (playerData[selectedPlayer]) {
+        document.getElementById('coachInvoiceInput').value = playerData[selectedPlayer].invoiceBalance;
+      }
+    }
+
+    // Dynamic Chart Rendering
     let chartsInitialized = false;
     function renderCharts() {
       if (chartsInitialized) return;
