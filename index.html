@@ -45,8 +45,8 @@
     /* Forms */
     .form-group { margin-bottom: 12px; text-align: left; }
     label { display: block; font-size: 0.75rem; color: #8e9bb0; margin-bottom: 4px; font-weight: 600;}
-    input, select { width: 100%; background-color: #0a111e; border: 1px solid #1a2436; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
-    input:focus, select:focus { border-color: #00a8e8; }
+    input, select, textarea { width: 100%; background-color: #0a111e; border: 1px solid #1a2436; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: #00a8e8; }
     .row { display: flex; gap: 10px; }
     .row > div { flex: 1; }
 
@@ -56,6 +56,8 @@
     .btn-logout { background-color: #1a2436; color: #f1f5f9; border: 1px solid #2d3748; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
     .btn-logout:hover { background-color: #2d3748; }
     .btn-outline { background: transparent; border: 1px solid #00a8e8; color: #00a8e8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;}
+    .btn-danger { background: rgba(255, 59, 0, 0.15); border: 1px solid #ff3b00; color: #ff3b00; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s; }
+    .btn-danger:hover { background: rgba(255, 59, 0, 0.3); }
 
     /* Profile Picture Upload */
     .profile-upload-container { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
@@ -199,7 +201,7 @@
           <!-- Analytical Trends -->
           <div class="section-title">Analytical Trends</div>
           <div class="trend-box" id="parentTrendText">
-            <strong>Coach Note:</strong> Strong performance consistency on full deliveries. Work ongoing on back-foot defensive positioning against short-pitched bowling.
+            <strong>Coach Note:</strong> Strong performance consistency on full deliveries.
           </div>
         </div>
       </div>
@@ -355,59 +357,85 @@
         <button class="btn-submit" onclick="addNewPlayer()">Add Player to Roster</button>
       </div>
 
-      <!-- Financial Management -->
+      <!-- Financial & Access Control Management -->
       <div class="card">
-        <div class="card-title">Manage Player Accounts</div>
-        <div class="card-subtitle">Update outstanding balances for existing accounts</div>
-        <div class="row form-group" style="align-items: flex-end;">
+        <div class="card-title">Manage Player Accounts & Passcodes</div>
+        <div class="card-subtitle">Control invoice balances, passcodes, or remove player profiles</div>
+        
+        <div class="form-group">
+          <label>Select Player</label>
+          <select id="coachPlayerSelect" onchange="loadCoachPlayerData()"></select>
+        </div>
+
+        <div class="row form-group">
           <div>
-            <label>Select Player</label>
-            <select id="coachPlayerSelect" onchange="loadCoachInvoiceData()"></select>
+            <label>Parent Passcode</label>
+            <input type="text" id="coachPasscodeInput" />
           </div>
           <div>
             <label>Outstanding Amount (R)</label>
             <input type="number" id="coachInvoiceInput" />
           </div>
         </div>
-        <button type="button" class="btn-outline" style="width: 100%; margin-top: 12px;" onclick="updateInvoiceBalance()">Save & Update Fees</button>
+
+        <div class="row" style="margin-top: 16px;">
+          <button type="button" class="btn-outline" style="flex:2;" onclick="updateCoachPlayerData()">Save Changes</button>
+          <button type="button" class="btn-danger" style="flex:1;" onclick="deletePlayer()">Delete Player</button>
+        </div>
       </div>
     </div>
 
-    <!-- Advanced Hyper-Analytics Section -->
+    <!-- INDIVIDUAL PLAYER HYPER-ANALYTICS BREAKDOWN -->
     <div class="card">
-      <div class="card-title">Squad Technical & Strategic Breakdown</div>
-      <div class="card-subtitle">Granular performance engine compiled from parent match entries</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #1a2436; padding-bottom: 12px; margin-bottom: 16px;">
+        <div>
+          <div class="card-title" style="margin: 0;">Individual Player Breakdown & Tactical Trends</div>
+          <div class="card-subtitle" style="margin: 0;">Select a player to analyze specific biomechanical & strategic metrics</div>
+        </div>
+        <div style="min-width: 220px;">
+          <select id="coachBreakdownSelect" onchange="loadIndividualBreakdown()"></select>
+        </div>
+      </div>
+
+      <!-- Player Specific Stat Overview -->
       <div class="grid-4" style="margin-top: 16px;">
         <div class="stat-card">
           <label>Control Index (CEI)</label>
-          <div class="stat-val">72.5%</div>
+          <div class="stat-val" id="coachCEI">--</div>
           <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Execution vs Forced errors</div>
         </div>
         <div class="stat-card">
-          <label>Bowling Dot Ball %</label>
-          <div class="stat-val">62.5%</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Pressure rate per spell</div>
+          <label>Unforced Error Rate</label>
+          <div class="stat-val" id="coachUnforcedRate" style="color: #ff3b00;">--</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Soft dismissals frequency</div>
         </div>
         <div class="stat-card">
-          <label>Execution Strike Rate</label>
-          <div class="stat-val" style="color: #fff;">15.1</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Balls per earned wicket</div>
+          <label>Boundary Rate</label>
+          <div class="stat-val" id="coachBoundaryRate" style="color: #fff;">--</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Boundary ball % faced</div>
         </div>
         <div class="stat-card">
-          <label>Fielding Net Impact</label>
-          <div class="stat-val" style="color: #00c2ff;">+24 Runs</div>
-          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Estimated net runs saved</div>
+          <label>Primary Vulnerability</label>
+          <div class="stat-val" id="coachPrimaryVuln" style="font-size: 1.1rem; color: #00c2ff;">--</div>
+          <div class="stat-desc" style="color: #64748b; font-size:0.7rem;">Delivery zone weakness</div>
         </div>
       </div>
-      
-      <!-- Charts -->
-      <div class="grid-2">
+
+      <!-- Editable Analytical Notes -->
+      <div class="form-group" style="margin-top: 16px;">
+        <label>Analytical Trends & Coach Feedback Notes (Visible to Parents)</label>
+        <textarea id="coachTrendNoteInput" rows="3" placeholder="Enter custom tactical trend notes for this player..."></textarea>
+        <button type="button" class="btn-outline" style="margin-top: 8px; width: auto;" onclick="saveTrendNote()">Save Trend Notes</button>
+      </div>
+
+      <!-- Player Charts -->
+      <div class="grid-2" style="margin-top: 24px;">
         <div>
-          <div class="section-title">Batting Vulnerability by Length</div>
+          <div class="section-title">Dismissal Vulnerability by Length</div>
           <div style="height: 200px;"><canvas id="lengthChart"></canvas></div>
         </div>
         <div>
-          <div class="section-title">Bowling Wicket Quality Index</div>
+          <div class="section-title">Wicket Quality / Wicket Cause Index</div>
           <div style="height: 200px;"><canvas id="qualityChart"></canvas></div>
         </div>
       </div>
@@ -418,7 +446,7 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    // Database Structure containing stats requested for Parent Dashboard
+    // Database Structure
     let players = {
       "player_1": { 
         name: "John Doe", 
@@ -439,6 +467,12 @@
         bowlingAvg: 14.2,
         bowlingSR: 13.2,
         economy: 6.45,
+        cei: "78.2%",
+        unforcedRate: "21.8%",
+        boundaryRate: "18.5%",
+        primaryVuln: "Full Pitch Up",
+        lengthData: [10, 15, 55, 20],
+        qualityData: [15, 4],
         trend: "Strong performance against spin bowlers. Front-foot drive control is high (78%)."
       },
       "player_2": { 
@@ -460,12 +494,19 @@
         bowlingAvg: 18.5,
         bowlingSR: 15.0,
         economy: 7.40,
+        cei: "64.0%",
+        unforcedRate: "36.0%",
+        boundaryRate: "12.1%",
+        primaryVuln: "Short / Bouncer",
+        lengthData: [50, 25, 15, 10],
+        qualityData: [8, 6],
         trend: "Excellent bowling accuracy on good length deliveries. Working on shortening seam release position."
       }
     };
     
     let currentUserId = null;
-    let chartsInitialized = false;
+    let lengthChartInstance = null;
+    let qualityChartInstance = null;
 
     // Initialization
     function init() {
@@ -475,15 +516,22 @@
     function populatePlayerDropdowns() {
       const loginSelect = document.getElementById('loginPlayerSelect');
       const coachSelect = document.getElementById('coachPlayerSelect');
+      const coachBreakdownSelect = document.getElementById('coachBreakdownSelect');
       
       loginSelect.innerHTML = '';
       coachSelect.innerHTML = '';
+      coachBreakdownSelect.innerHTML = '';
       
       for (const [id, data] of Object.entries(players)) {
         loginSelect.options.add(new Option(data.name, id));
         coachSelect.options.add(new Option(data.name, id));
+        coachBreakdownSelect.options.add(new Option(data.name, id));
       }
-      loadCoachInvoiceData();
+      
+      if (Object.keys(players).length > 0) {
+        loadCoachPlayerData();
+        loadIndividualBreakdown();
+      }
     }
 
     // Login Navigation
@@ -519,7 +567,7 @@
       const passcode = document.getElementById('loginCoachPasscode').value;
       if (passcode === 'coach123') {
         switchView('coach-view');
-        renderCharts();
+        loadIndividualBreakdown();
       } else {
         showError('Invalid coach password.');
       }
@@ -623,6 +671,12 @@
         bowlingAvg: 0.0,
         bowlingSR: 0.0,
         economy: 0.0,
+        cei: "0.0%",
+        unforcedRate: "0.0%",
+        boundaryRate: "0.0%",
+        primaryVuln: "N/A",
+        lengthData: [0, 0, 0, 0],
+        qualityData: [0, 0],
         trend: "New player added. Match data pending entry."
       };
 
@@ -634,42 +688,85 @@
       alert(`${name} added to roster successfully!`);
     }
 
-    function loadCoachInvoiceData() {
+    function loadCoachPlayerData() {
       const selectedId = document.getElementById('coachPlayerSelect').value;
       if (players[selectedId]) {
         document.getElementById('coachInvoiceInput').value = players[selectedId].invoice;
+        document.getElementById('coachPasscodeInput').value = players[selectedId].passcode;
       }
     }
 
-    function updateInvoiceBalance() {
+    function updateCoachPlayerData() {
       const selectedId = document.getElementById('coachPlayerSelect').value;
       const newAmount = parseFloat(document.getElementById('coachInvoiceInput').value) || 0;
+      const newPasscode = document.getElementById('coachPasscodeInput').value.trim();
       
+      if (!newPasscode) {
+        alert("Passcode cannot be empty.");
+        return;
+      }
+
       if (players[selectedId]) {
         players[selectedId].invoice = newAmount;
-        alert(`Invoice for ${players[selectedId].name} updated to R ${newAmount.toFixed(2)}`);
+        players[selectedId].passcode = newPasscode;
+        alert(`Account for ${players[selectedId].name} updated!`);
       }
     }
 
-    // Charts for Coach Dashboard
-    function renderCharts() {
-      if (chartsInitialized) return;
-      chartsInitialized = true;
+    function deletePlayer() {
+      const selectedId = document.getElementById('coachPlayerSelect').value;
+      if (!players[selectedId]) return;
 
-      new Chart(document.getElementById('lengthChart'), {
+      const confirmDelete = confirm(`Are you sure you want to delete ${players[selectedId].name}? This cannot be undone.`);
+      if (confirmDelete) {
+        const deletedName = players[selectedId].name;
+        delete players[selectedId];
+        populatePlayerDropdowns();
+        alert(`${deletedName} removed from roster.`);
+      }
+    }
+
+    // Individual Breakdown Engine
+    function loadIndividualBreakdown() {
+      const selectedId = document.getElementById('coachBreakdownSelect').value;
+      const p = players[selectedId];
+      if (!p) return;
+
+      document.getElementById('coachCEI').innerText = p.cei || "0%";
+      document.getElementById('coachUnforcedRate').innerText = p.unforcedRate || "0%";
+      document.getElementById('coachBoundaryRate').innerText = p.boundaryRate || "0%";
+      document.getElementById('coachPrimaryVuln').innerText = p.primaryVuln || "N/A";
+      document.getElementById('coachTrendNoteInput').value = p.trend || "";
+
+      renderIndividualCharts(p.lengthData || [0,0,0,0], p.qualityData || [0,0]);
+    }
+
+    function saveTrendNote() {
+      const selectedId = document.getElementById('coachBreakdownSelect').value;
+      if (players[selectedId]) {
+        players[selectedId].trend = document.getElementById('coachTrendNoteInput').value;
+        alert(`Trend note saved for ${players[selectedId].name}!`);
+      }
+    }
+
+    function renderIndividualCharts(lengthData, qualityData) {
+      if (lengthChartInstance) lengthChartInstance.destroy();
+      if (qualityChartInstance) qualityChartInstance.destroy();
+
+      lengthChartInstance = new Chart(document.getElementById('lengthChart'), {
         type: 'bar',
         data: {
           labels: ['Short', 'Good', 'Full', 'Yorker'],
-          datasets: [{ data: [10, 20, 50, 20], backgroundColor: '#00a8e8', borderRadius: 4 }]
+          datasets: [{ data: lengthData, backgroundColor: '#00a8e8', borderRadius: 4 }]
         },
         options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#1a2436' }, ticks: { color: '#8e9bb0' } }, y: { grid: { display: false }, ticks: { color: '#8e9bb0' } } } }
       });
 
-      new Chart(document.getElementById('qualityChart'), {
+      qualityChartInstance = new Chart(document.getElementById('qualityChart'), {
         type: 'doughnut',
         data: {
           labels: ['Good Delivery', 'Batter Error'],
-          datasets: [{ data: [14, 5], backgroundColor: ['#00a8e8', '#ff3b00'], borderWidth: 0 }]
+          datasets: [{ data: qualityData, backgroundColor: ['#00a8e8', '#ff3b00'], borderWidth: 0 }]
         },
         options: { plugins: { legend: { position: 'right', labels: { color: '#8e9bb0', font: {size: 10} } } } }
       });
