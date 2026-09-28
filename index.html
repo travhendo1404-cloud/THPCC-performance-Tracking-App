@@ -1,452 +1,348 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Madibaz Youth Analytics</title>
+  <title>Madibaz Youth Performance Portal</title>
   
-  <!-- 1. Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- 2. React & ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <!-- 3. Babel for JSX parsing -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <!-- 4. Recharts & Prop-Types -->
-  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
-  <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+  <!-- Chart.js for reliable native browser charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body {
-      background-color: #020617;
-      color: #f8fafc;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
+    /* Reset & Base Styling */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #090d16; color: #f1f5f9; padding: 20px; line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* Header & Navigation Tabs */
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+    h1 { color: #10b981; font-size: 1.5rem; }
+    .subtitle { color: #94a3b8; font-size: 0.85rem; }
+    
+    .nav-tabs { display: flex; background-color: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 4px; }
+    .tab-btn { background: none; border: none; color: #94a3b8; padding: 8px 18px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
+    .tab-btn.active { background-color: #10b981; color: #090d16; }
+
+    /* Layout Grids */
+    .grid-parent { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media(min-width: 900px) { .grid-parent { grid-template-columns: 7fr 5fr; } }
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media(min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+    /* Component Cards */
+    .card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 20px; }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .card-subtitle { font-size: 0.75rem; color: #94a3b8; margin-bottom: 16px; }
+    
+    .section-title { font-size: 0.9rem; font-weight: 600; color: #10b981; margin-bottom: 12px; border-bottom: 1px solid #1e293b; padding-bottom: 6px; }
+
+    /* Form Styling */
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px; }
+    input, select { width: 100%; background-color: #090d16; border: 1px solid #1e293b; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; }
+    input:focus, select:focus { border-color: #10b981; }
+    .row { display: flex; gap: 12px; }
+    .row > div { flex: 1; }
+
+    .btn-submit { width: 100%; background-color: #10b981; color: #090d16; font-weight: 700; border: none; padding: 12px; border-radius: 10px; cursor: pointer; margin-top: 12px; }
+    .btn-submit:hover { background-color: #34d399; }
+
+    /* Stat Cards */
+    .stat-card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; }
+    .stat-val { font-size: 1.6rem; font-weight: 700; color: #10b981; margin-top: 4px; }
+    .stat-desc { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+
+    /* Alert Box */
+    .alert-box { background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; color: #fcd34d; font-size: 0.85rem; }
+
+    /* Tab Displays */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <script type="text/babel">
-    const { useState } = React;
-    const { 
-      BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, 
-      PieChart, Pie, Cell 
-    } = Recharts;
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div>
+        <h1>Madibaz Youth Analytics</h1>
+        <p class="subtitle">High-Performance Cricket Development Portal</p>
+      </div>
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('parent')">Parent Entry & Summary</button>
+        <button class="tab-btn" onclick="switchTab('coach')">Coach Hyper-Analytics</button>
+      </div>
+    </header>
 
-    const playerStats = {
-      name: "Liam Henderson",
-      role: "All-Rounder (Fast Bowler / Middle Order Batter)",
-      matches: 12,
-      batting: {
-        runs: 384,
-        ballsFaced: 295,
-        strikeRate: 130.17,
-        average: 38.4,
-        controlIndex: 72.5,
-        selfOutCount: 3,
-        goodBallOutCount: 7,
-        dismissalByLength: [
-          { length: 'Short/Bouncer', count: 1, percentage: 10 },
-          { length: 'Good Length', count: 2, percentage: 20 },
-          { length: 'Full Pitch Up', count: 5, percentage: 50 },
-          { length: 'Yorker', count: 2, percentage: 20 },
-        ],
-        fieldingCatchZones: [
-          { position: 'Cover / Mid-Off Ring', count: 5, riskLevel: 'High' },
-          { position: 'Slips / Keeper', count: 2, riskLevel: 'Low' },
-          { position: 'Deep Mid-Wicket', count: 1, riskLevel: 'Medium' },
-        ]
-      },
-      bowling: {
-        overs: 48.0,
-        maidens: 6,
-        runsConceded: 216,
-        wickets: 19,
-        economy: 4.50,
-        dotBallPercentage: 62.5,
-        wicketQuality: [
-          { name: 'Good Delivery / Plan Executed', value: 14, color: '#10B981' },
-          { name: 'Batter Error / Loose Shot', value: 5, color: '#F59E0B' }
-        ],
-        wicketTypes: [
-          { mode: 'Bowled / LBW (Stump-to-Stump)', count: 9 },
-          { mode: 'Caught Behind / Slips', count: 6 },
-          { mode: 'Outfield Catches', count: 4 }
-        ]
-      },
-      fielding: {
-        catchesTaken: 8,
-        catchesDropped: 1,
-        catchConversion: 88.8,
-        runOutInvolvements: 3,
-        directHits: 2,
-        runsSavedNet: 24
-      }
-    };
+    <!-- ========================================== -->
+    <!-- TAB 1: PARENT ENTRY FORM & BASIC DASHBOARD -->
+    <!-- ========================================== -->
+    <div id="parent-tab" class="tab-content active">
+      <div class="grid-parent">
+        
+        <!-- Input Form -->
+        <div class="card">
+          <div class="card-title">Post-Match Parent Entry</div>
+          <div class="card-subtitle">Fast, 2-minute logging after match day</div>
 
-    function App() {
-      const [activeTab, setActiveTab] = useState('parent');
-
-      const [formData, setFormData] = useState({
-        playerName: '',
-        matchDate: new Date().toISOString().split('T')[0],
-        runs: '',
-        balls: '',
-        isOut: 'Out',
-        dismissalMode: 'Caught',
-        caughtPosition: 'Cover / Mid-Off Ring',
-        dismissalLine: 'Outside Off',
-        dismissalLength: 'Full Pitch Up',
-        dismissalAssessment: 'Got self out',
-        overs: '',
-        maidens: '',
-        bowlingRuns: '',
-        wickets: '',
-        catches: '0',
-        drops: '0',
-        runOuts: '0'
-      });
-
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-      };
-
-      return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8">
-          {/* Header Navigation */}
-          <header className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-4 gap-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-emerald-400">Madibaz Youth Analytics</h1>
-              <p className="text-sm text-slate-400">High-Performance Cricket Development Portal</p>
-            </div>
-            <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
-              <button
-                onClick={() => setActiveTab('parent')}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeTab === 'parent' 
-                    ? 'bg-emerald-500 text-slate-950 font-semibold shadow-lg' 
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Parent Entry & View
-              </button>
-              <button
-                onClick={() => setActiveTab('coach')}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeTab === 'coach' 
-                    ? 'bg-emerald-500 text-slate-950 font-semibold shadow-lg' 
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Coach Hyper-Analytics
-              </button>
-            </div>
-          </header>
-
-          <main className="max-w-7xl mx-auto">
-            {/* PARENT VIEW */}
-            {activeTab === 'parent' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Input Form Column */}
-                <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                  <div className="mb-6 pb-4 border-b border-slate-800">
-                    <h2 className="text-lg font-semibold text-white">Post-Match Parent Entry</h2>
-                    <p className="text-xs text-slate-400">Fast, 2-minute logging after match day</p>
-                  </div>
-
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs text-slate-400 mb-1">Player Name</label>
-                        <input 
-                          type="text" 
-                          name="playerName"
-                          value={formData.playerName}
-                          onChange={handleInputChange}
-                          placeholder="e.g. Liam Henderson" 
-                          className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-slate-400 mb-1">Match Date</label>
-                        <input 
-                          type="date" 
-                          name="matchDate"
-                          value={formData.matchDate}
-                          onChange={handleInputChange}
-                          className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500"
-                        />
-                      </div>
-                    </div>
-
-                    {/* 1. BATTING */}
-                    <div className="border border-slate-800 bg-slate-950/50 p-4 rounded-xl space-y-4">
-                      <h3 className="text-sm font-semibold text-emerald-400">1. Batting Statistics</h3>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Runs Scored</label>
-                          <input type="number" name="runs" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Balls Faced</label>
-                          <input type="number" name="balls" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Status</label>
-                          <select name="isOut" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                            <option>Out</option>
-                            <option>Not Out</option>
-                            <option>Retired</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="pt-2 border-t border-slate-800 space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-xs text-slate-400 mb-1">Dismissal Mode</label>
-                            <select name="dismissalMode" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                              <option>Caught</option>
-                              <option>Bowled</option>
-                              <option>LBW</option>
-                              <option>Run Out</option>
-                              <option>Stumped</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-slate-400 mb-1">Fielding Catch Zone</label>
-                            <select name="caughtPosition" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                              <option>Slip / Gully</option>
-                              <option>Point / Cover Ring</option>
-                              <option>Mid-Off / Mid-On</option>
-                              <option>Mid-Wicket / Square Leg</option>
-                              <option>Deep Boundary</option>
-                              <option>Wicketkeeper</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-xs text-slate-400 mb-1">Delivery Line</label>
-                            <select name="dismissalLine" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                              <option>Outside Off</option>
-                              <option>Stumps / Straight</option>
-                              <option>Down Leg</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-slate-400 mb-1">Delivery Length</label>
-                            <select name="dismissalLength" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                              <option>Full Pitch Up</option>
-                              <option>Good Length</option>
-                              <option>Short / Bouncer</option>
-                              <option>Yorker / Full Toss</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-slate-400 mb-1">Assessment</label>
-                            <select name="dismissalAssessment" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
-                              <option>Got self out (Execution error)</option>
-                              <option>Good ball (Unplayable delivery)</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. BOWLING */}
-                    <div className="border border-slate-800 bg-slate-950/50 p-4 rounded-xl space-y-4">
-                      <h3 className="text-sm font-semibold text-emerald-400">2. Bowling Statistics</h3>
-                      <div className="grid grid-cols-4 gap-3">
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Overs</label>
-                          <input type="number" step="0.1" placeholder="4.0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Maidens</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Runs</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Wickets</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 3. FIELDING */}
-                    <div className="border border-slate-800 bg-slate-950/50 p-4 rounded-xl space-y-4">
-                      <h3 className="text-sm font-semibold text-emerald-400">3. Fielding Involvements</h3>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Catches Held</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Catches Dropped</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-slate-400 mb-1">Run Out Involvements</label>
-                          <input type="number" placeholder="0" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <button 
-                      type="button" 
-                      className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg"
-                    >
-                      Submit Match Entry
-                    </button>
-                  </form>
-                </div>
-
-                {/* Parent Summary Column */}
-                <div className="lg:col-span-5 space-y-6">
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                    <h2 className="text-lg font-semibold text-white mb-1">Player Summary</h2>
-                    <p className="text-xs text-slate-400 mb-6">Clean season totals for parents</p>
-
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <p className="text-xs text-slate-400 mb-1">Batting Average</p>
-                        <p className="text-2xl font-bold text-white">{playerStats.batting.average}</p>
-                        <span className="text-xs text-emerald-400 font-medium">SR: {playerStats.batting.strikeRate}</span>
-                      </div>
-                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <p className="text-xs text-slate-400 mb-1">Season Wickets</p>
-                        <p className="text-2xl font-bold text-white">{playerStats.bowling.wickets}</p>
-                        <span className="text-xs text-emerald-400 font-medium">Econ: {playerStats.bowling.economy}</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 border-t border-slate-800 pt-4">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-slate-400">Total Season Runs:</span>
-                        <span className="font-semibold text-white">{playerStats.batting.runs}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-slate-400">Catch Efficiency:</span>
-                        <span className="font-semibold text-emerald-400">{playerStats.fielding.catchConversion}%</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-slate-400">Run Out Involvements:</span>
-                        <span className="font-semibold text-white">{playerStats.fielding.runOutInvolvements}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          <form id="matchForm">
+            <div class="row form-group">
+              <div>
+                <label>Player Name</label>
+                <input type="text" placeholder="e.g. Liam Henderson" required />
               </div>
-            )}
-
-            {/* COACH VIEW */}
-            {activeTab === 'coach' && (
-              <div className="space-y-8">
-                {/* Stats Ribbon */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                    <span className="text-xs text-slate-400">Control Index (CEI)</span>
-                    <p className="text-2xl font-bold text-emerald-400 mt-1">{playerStats.batting.controlIndex}%</p>
-                    <p className="text-[10px] text-slate-500 mt-1">% Wickets lost to good balls vs mistakes</p>
-                  </div>
-                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                    <span className="text-xs text-slate-400">Bowling Dot Ball %</span>
-                    <p className="text-2xl font-bold text-emerald-400 mt-1">{playerStats.bowling.dotBallPercentage}%</p>
-                    <p className="text-[10px] text-slate-500 mt-1">Pressure metric per spell</p>
-                  </div>
-                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                    <span className="text-xs text-slate-400">Execution Strike Rate</span>
-                    <p className="text-2xl font-bold text-white mt-1">15.1</p>
-                    <p className="text-[10px] text-slate-500 mt-1">Balls per earned wicket</p>
-                  </div>
-                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                    <span className="text-xs text-slate-400">Fielding Net Impact</span>
-                    <p className="text-2xl font-bold text-emerald-400 mt-1">+{playerStats.fielding.runsSavedNet} Runs</p>
-                    <p className="text-[10px] text-slate-500 mt-1">Estimated net runs saved in field</p>
-                  </div>
-                </div>
-
-                {/* Tactical Alert */}
-                <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl">
-                  <h4 className="text-sm font-semibold text-amber-400">Automated Tactical Insight for Head Coach</h4>
-                  <p className="text-xs text-slate-300 mt-1">
-                    <strong>Batting Flaw Detected:</strong> 50% of player dismissals occur on <em>Full / Pitch-Up</em> deliveries targeted <em>Outside Off</em>, with 62% resulting in airborne catches in the Cover/Mid-Off ring. Recommended focus: front-foot driving mechanics & ground-hitting drills.
-                  </p>
-                </div>
-
-                {/* Charts Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Chart 1 */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                    <h3 className="text-base font-semibold text-white mb-1">Batting Dismissal Vulnerability by Length</h3>
-                    <p className="text-xs text-slate-400 mb-6">Distribution of how the batter gets out based on ball length</p>
-                    <div className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={playerStats.batting.dismissalByLength} layout="vertical">
-                          <XAxis type="number" stroke="#64748b" fontSize={12} />
-                          <YAxis dataKey="length" type="category" stroke="#64748b" fontSize={12} width={100} />
-                          <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }} />
-                          <Bar dataKey="percentage" fill="#10B981" radius={[0, 4, 4, 0]} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  {/* Chart 2 */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                    <h3 className="text-base font-semibold text-white mb-1">Bowling Wicket Quality Index</h3>
-                    <p className="text-xs text-slate-400 mb-6">Wickets earned via executed plans vs batter unforced errors</p>
-                    <div className="h-64 flex items-center justify-center">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={playerStats.bowling.wicketQuality}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={80}
-                            paddingAngle={5}
-                            dataKey="value"
-                          >
-                            {playerStats.bowling.wicketQuality.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="flex justify-center gap-6 mt-2 text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-                        <span className="text-slate-300">Earned via Good Delivery (14)</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-                        <span className="text-slate-300">Batter Error (5)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div>
+                <label>Match Date</label>
+                <input type="date" value="2026-09-28" required />
               </div>
-            )}
-          </main>
+            </div>
+
+            <!-- 1. Batting -->
+            <div class="section-title">1. Batting Details</div>
+            <div class="row form-group">
+              <div><label>Runs</label><input type="number" placeholder="0" /></div>
+              <div><label>Balls Faced</label><input type="number" placeholder="0" /></div>
+              <div>
+                <label>Status</label>
+                <select>
+                  <option>Out</option>
+                  <option>Not Out</option>
+                  <option>Retired</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div>
+                <label>Dismissal Mode</label>
+                <select>
+                  <option>Caught</option>
+                  <option>Bowled</option>
+                  <option>LBW</option>
+                  <option>Run Out</option>
+                  <option>Stumped</option>
+                </select>
+              </div>
+              <div>
+                <label>Catching Position (if caught)</label>
+                <select>
+                  <option>Slip / Gully</option>
+                  <option>Cover / Mid-Off Ring</option>
+                  <option>Mid-Wicket / Square Leg</option>
+                  <option>Deep Boundary</option>
+                  <option>Wicketkeeper</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div>
+                <label>Delivery Line</label>
+                <select>
+                  <option>Outside Off</option>
+                  <option>Stumps / Straight</option>
+                  <option>Down Leg</option>
+                </select>
+              </div>
+              <div>
+                <label>Delivery Length</label>
+                <select>
+                  <option>Full Pitch Up</option>
+                  <option>Good Length</option>
+                  <option>Short / Bouncer</option>
+                  <option>Yorker / Full Toss</option>
+                </select>
+              </div>
+              <div>
+                <label>Assessment</label>
+                <select>
+                  <option>Got self out (Execution error)</option>
+                  <option>Good ball (Unplayable)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 2. Bowling -->
+            <div class="section-title" style="margin-top: 16px;">2. Bowling Details</div>
+            <div class="row form-group">
+              <div><label>Overs</label><input type="number" step="0.1" placeholder="4.0" /></div>
+              <div><label>Maidens</label><input type="number" placeholder="0" /></div>
+              <div><label>Runs</label><input type="number" placeholder="0" /></div>
+              <div><label>Wickets</label><input type="number" placeholder="0" /></div>
+            </div>
+
+            <!-- 3. Fielding -->
+            <div class="section-title" style="margin-top: 16px;">3. Fielding Involvements</div>
+            <div class="row form-group">
+              <div><label>Catches Held</label><input type="number" placeholder="0" /></div>
+              <div><label>Catches Dropped</label><input type="number" placeholder="0" /></div>
+              <div><label>Run Out Involvements</label><input type="number" placeholder="0" /></div>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="alert('Match Entry Saved!')">Submit Match Entry</button>
+          </form>
         </div>
-      );
+
+        <!-- Parent Summary -->
+        <div>
+          <div class="card">
+            <div class="card-title">Season Overview</div>
+            <div class="card-subtitle">Clean totals for player & parents</div>
+
+            <div class="row" style="margin-bottom: 16px;">
+              <div class="stat-card">
+                <label>Batting Avg</label>
+                <div class="stat-val">38.4</div>
+                <div class="stat-desc">SR: 130.17</div>
+              </div>
+              <div class="stat-card">
+                <label>Season Wickets</label>
+                <div class="stat-val">19</div>
+                <div class="stat-desc">Econ: 4.50</div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.85rem; border-top: 1px solid #1e293b; padding-top: 12px;">
+              <p style="display:flex; justify-between; margin-bottom: 8px;"><span>Total Season Runs:</span> <strong>384</strong></p>
+              <p style="display:flex; justify-between; margin-bottom: 8px;"><span>Catching Success Rate:</span> <strong style="color:#10b981;">88.8%</strong></p>
+              <p style="display:flex; justify-between;"><span>Run Out Involvements:</span> <strong>3</strong></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: COACH HYPER-ANALYTICS DASHBOARD    -->
+    <!-- ========================================== -->
+    <div id="coach-tab" class="tab-content">
+      
+      <!-- Key Stat Ribbon -->
+      <div class="grid-4">
+        <div class="stat-card">
+          <label>Control Index (CEI)</label>
+          <div class="stat-val">72.5%</div>
+          <div class="stat-desc">% Wickets lost to good balls vs mistakes</div>
+        </div>
+        <div class="stat-card">
+          <label>Bowling Dot Ball %</label>
+          <div class="stat-val">62.5%</div>
+          <div class="stat-desc">Pressure metric per spell</div>
+        </div>
+        <div class="stat-card">
+          <label>Execution Strike Rate</label>
+          <div class="stat-val" style="color: #fff;">15.1</div>
+          <div class="stat-desc">Balls per earned wicket</div>
+        </div>
+        <div class="stat-card">
+          <label>Fielding Net Impact</label>
+          <div class="stat-val">+24 Runs</div>
+          <div class="stat-desc">Estimated net runs saved</div>
+        </div>
+      </div>
+
+      <!-- Coach Tactical Alert Box -->
+      <div class="alert-box">
+        <strong>Automated Tactical Insight for Head Coach:</strong><br/>
+        50% of batter dismissals occur on <em>Full / Pitch-Up</em> deliveries targeted <em>Outside Off</em>, with 62% resulting in airborne catches in the Cover/Mid-Off ring. Recommended focus: front-foot driving mechanics & ground-hitting drills.
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="grid-2">
+        
+        <!-- Batting Dismissal Vulnerability Chart -->
+        <div class="card">
+          <div class="card-title">Batting Dismissal Vulnerability by Length</div>
+          <div class="card-subtitle">% Distribution of dismissals by length</div>
+          <div style="height: 250px;">
+            <canvas id="lengthChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Bowling Wicket Quality Chart -->
+        <div class="card">
+          <div class="card-title">Bowling Wicket Quality Index</div>
+          <div class="card-subtitle">Executed plans vs batter unforced errors</div>
+          <div style="height: 250px;">
+            <canvas id="qualityChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Vanilla JavaScript Logic -->
+  <script>
+    // Tab Switcher
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      if (tabName === 'parent') {
+        document.getElementById('parent-tab').classList.add('active');
+        event.target.classList.add('active');
+      } else {
+        document.getElementById('coach-tab').classList.add('active');
+        event.target.classList.add('active');
+        renderCharts(); // Render charts when coach tab is opened
+      }
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    // Chart.js Rendering
+    let chartsInitialized = false;
+    function renderCharts() {
+      if (chartsInitialized) return;
+      chartsInitialized = true;
+
+      // 1. Batting Length Chart
+      new Chart(document.getElementById('lengthChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Short / Bouncer', 'Good Length', 'Full Pitch Up', 'Yorker'],
+          datasets: [{
+            label: 'Dismissal %',
+            data: [10, 20, 50, 20],
+            backgroundColor: '#10b981',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+
+      // 2. Bowling Quality Doughnut Chart
+      new Chart(document.getElementById('qualityChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Good Delivery / Executed Plan', 'Batter Error / Loose Shot'],
+          datasets: [{
+            data: [14, 5],
+            backgroundColor: ['#10b981', '#f59e0b'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
