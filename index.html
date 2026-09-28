@@ -116,7 +116,7 @@
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
             <i data-lucide="shield-check" class="w-5 h-5 text-red-500"></i> Master Coach Control Panel
           </h2>
-          <p class="text-xs text-slate-400">Manage all academy players, edit profiles, and view technical trends</p>
+          <p class="text-xs text-slate-400">Manage player rosters, set invoice balances, and track performances</p>
         </div>
         <button onclick="openAddPlayerModal()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow">
           <i data-lucide="user-plus" class="w-4 h-4"></i> Add New Player Profile
@@ -139,10 +139,17 @@
         <!-- Selected Player Detailed View -->
         <div id="player-detail-panel" class="lg:col-span-2 bg-[#1C2541] p-5 rounded-xl border border-slate-700/60 space-y-6">
           <div class="flex justify-between items-start border-b border-slate-700/60 pb-4">
-            <div>
-              <h3 id="view-player-name" class="text-xl font-bold text-white">Select a Player</h3>
-              <p id="view-player-sub" class="text-xs text-slate-400 mt-0.5">-</p>
+            <div class="flex items-center gap-4">
+              <!-- Player Photo / Avatar -->
+              <div id="view-player-photo-container" class="relative">
+                <img id="view-player-photo" src="" alt="Player Photo" class="w-16 h-16 rounded-full object-cover border-2 border-cyan-400 shadow">
+              </div>
+              <div>
+                <h3 id="view-player-name" class="text-xl font-bold text-white">Select a Player</h3>
+                <p id="view-player-sub" class="text-xs text-slate-400 mt-0.5">-</p>
+              </div>
             </div>
+
             <div class="flex gap-2">
               <button id="btn-edit-player" onclick="editCurrentPlayer()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded border border-slate-700 flex items-center gap-1">
                 <i data-lucide="edit-2" class="w-3.5 h-3.5"></i> Edit Profile
@@ -151,6 +158,22 @@
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
               </button>
             </div>
+          </div>
+
+          <!-- Coach Financial Control Box -->
+          <div class="bg-slate-900/90 border border-amber-500/30 p-4 rounded-xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 uppercase font-semibold">Invoice Amount Due</span>
+                <p id="view-player-invoice-display" class="text-lg font-bold text-amber-400">R 0.00</p>
+              </div>
+            </div>
+            <button onclick="promptUpdateInvoice()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold rounded border border-amber-500/40 transition">
+              Update Balance
+            </button>
           </div>
 
           <!-- Career Overview Stats -->
@@ -192,12 +215,27 @@
     <!-- ========================================================= -->
     <div id="parent-dashboard" class="hidden max-w-lg mx-auto space-y-6">
       
+      <!-- Parent Header Info + Photo Upload -->
       <div class="bg-[#1C2541] p-4 rounded-xl border border-slate-700/60 flex items-center justify-between">
-        <div>
-          <p class="text-xs text-slate-400">Parent Portal</p>
-          <p id="parent-portal-player-name" class="font-bold text-white text-base">-</p>
+        <div class="flex items-center gap-3">
+          <div class="relative group">
+            <img id="parent-player-photo" src="" alt="Player Photo" class="w-12 h-12 rounded-full object-cover border-2 border-cyan-400">
+            <label for="photo-upload-input" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer text-[9px] font-bold transition">
+              Change
+            </label>
+            <input type="file" id="photo-upload-input" accept="image/*" onchange="uploadPlayerPhoto(event)" class="hidden">
+          </div>
+          <div>
+            <p class="text-xs text-slate-400">Parent Portal</p>
+            <p id="parent-portal-player-name" class="font-bold text-white text-base">-</p>
+          </div>
         </div>
-        <span class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs rounded-full font-semibold">Active Session</span>
+        
+        <!-- Parent Invoice View (Read Only) -->
+        <div class="text-right bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="text-[9px] text-slate-400 block uppercase font-bold">Invoice Due</span>
+          <span id="parent-invoice-due" class="text-sm font-bold text-amber-400">R 0.00</span>
+        </div>
       </div>
 
       <!-- Match Submission Form -->
@@ -218,13 +256,21 @@
                 <option>50 Over</option>
                 <option>T20</option>
                 <option>Two-Day</option>
+                <option>Time Cricket</option>
               </select>
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs text-slate-300 mb-1">Opposition / Team</label>
-            <input type="text" id="match-opp" placeholder="e.g. Outeniqua High" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+          <!-- Playing For & Versus -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">Playing For (Team)</label>
+              <input type="text" id="match-playing-for" placeholder="e.g. Outeniqua High U15A" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">Versus (Opposition)</label>
+              <input type="text" id="match-opp" placeholder="e.g. Oakdale" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
@@ -284,6 +330,10 @@
           <label class="block text-xs text-slate-300 mb-1">Parent Passcode (For Parent Access)</label>
           <input type="text" id="form-player-passcode" required placeholder="e.g. 5566" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
         </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Invoice Amount Due (ZAR)</label>
+          <input type="number" id="form-player-invoice" placeholder="0.00" step="0.01" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+        </div>
 
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" onclick="closePlayerModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs rounded-lg">Cancel</button>
@@ -296,10 +346,12 @@
   <script>
     lucide.createIcons();
 
+    const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80";
+
     // APP STATE MANAGEMENT (Saved in localStorage)
     let players = JSON.parse(localStorage.getItem('thpcc_players')) || [
-      { id: '1', name: 'David Miller', squad: 'U17', role: 'Top-Order Batter', passcode: '1111', matches: [] },
-      { id: '2', name: 'Cameron Stander', squad: 'U19', role: 'Right-Arm Fast', passcode: '2222', matches: [] }
+      { id: '1', name: 'David Miller', squad: 'U17', role: 'Top-Order Batter', passcode: '1111', invoiceDue: 450.00, photo: DEFAULT_AVATAR, matches: [] },
+      { id: '2', name: 'Cameron Stander', squad: 'U19', role: 'Right-Arm Fast', passcode: '2222', invoiceDue: 0.00, photo: DEFAULT_AVATAR, matches: [] }
     ];
 
     let currentSelectedPlayerId = players[0]?.id || null;
@@ -348,6 +400,8 @@
         document.getElementById('nav-controls').classList.remove('hidden');
         document.getElementById('role-badge').innerText = "Parent View: " + player.name;
         document.getElementById('parent-portal-player-name').innerText = player.name + " (" + player.squad + ")";
+        document.getElementById('parent-player-photo').src = player.photo || DEFAULT_AVATAR;
+        document.getElementById('parent-invoice-due').innerText = "R " + (parseFloat(player.invoiceDue) || 0).toFixed(2);
       } else {
         alert("Incorrect passcode for " + (player ? player.name : "selected player") + ".");
       }
@@ -373,18 +427,38 @@
       location.reload();
     }
 
+    // PHOTO UPLOAD FUNCTION
+    function uploadPlayerPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Image = e.target.result;
+        const player = players.find(p => p.id === currentSelectedPlayerId);
+        if (player) {
+          player.photo = base64Image;
+          saveState();
+          document.getElementById('parent-player-photo').src = base64Image;
+          alert("Profile photo updated successfully!");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
     // COACH ROSTER & PLAYER MANAGEMENT
     function renderCoachRoster() {
       const rosterList = document.getElementById('roster-list');
       document.getElementById('player-count').innerText = players.length;
 
       rosterList.innerHTML = players.map(p => `
-        <div onclick="selectPlayerForView('${p.id}')" class="p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg border ${p.id === currentSelectedPlayerId ? 'border-red-500' : 'border-slate-800'} cursor-pointer transition flex items-center justify-between">
-          <div>
+        <div onclick="selectPlayerForView('${p.id}')" class="p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg border ${p.id === currentSelectedPlayerId ? 'border-red-500' : 'border-slate-800'} cursor-pointer transition flex items-center gap-3">
+          <img src="${p.photo || DEFAULT_AVATAR}" class="w-9 h-9 rounded-full object-cover border border-slate-700">
+          <div class="flex-1">
             <p class="text-xs font-semibold text-white">${p.name}</p>
             <p class="text-[10px] text-slate-400">${p.role} • ${p.squad}</p>
           </div>
-          <span class="text-[10px] font-bold text-cyan-400">Passcode: ${p.passcode}</span>
+          <span class="text-[10px] font-bold text-cyan-400">PIN: ${p.passcode}</span>
         </div>
       `).join('');
     }
@@ -401,6 +475,8 @@
 
       document.getElementById('view-player-name').innerText = player.name;
       document.getElementById('view-player-sub').innerText = `${player.role} • ${player.squad} Squad • Parent Passcode: ${player.passcode}`;
+      document.getElementById('view-player-photo').src = player.photo || DEFAULT_AVATAR;
+      document.getElementById('view-player-invoice-display').innerText = "R " + (parseFloat(player.invoiceDue) || 0).toFixed(2);
 
       // Calculate career stats
       const matchesCount = player.matches.length;
@@ -421,7 +497,7 @@
         historyList.innerHTML = player.matches.map(m => `
           <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
             <div>
-              <p class="text-xs font-bold text-white">vs ${m.opp} (${m.format})</p>
+              <p class="text-xs font-bold text-white">${m.playingFor || 'Team'} vs ${m.opp} (${m.format})</p>
               <p class="text-[10px] text-slate-400">${m.date}</p>
             </div>
             <div class="text-right text-xs">
@@ -430,6 +506,18 @@
             </div>
           </div>
         `).join('');
+      }
+    }
+
+    function promptUpdateInvoice() {
+      const player = players.find(p => p.id === currentSelectedPlayerId);
+      if (!player) return;
+
+      const newAmount = prompt(`Enter new invoice amount due for ${player.name} (ZAR):`, player.invoiceDue || 0);
+      if (newAmount !== null && !isNaN(parseFloat(newAmount))) {
+        player.invoiceDue = parseFloat(newAmount);
+        saveState();
+        renderPlayerDetails();
       }
     }
 
@@ -451,6 +539,7 @@
       document.getElementById('form-player-squad').value = player.squad;
       document.getElementById('form-player-role').value = player.role;
       document.getElementById('form-player-passcode').value = player.passcode;
+      document.getElementById('form-player-invoice').value = player.invoiceDue || 0;
       document.getElementById('player-modal').classList.remove('hidden');
     }
 
@@ -465,6 +554,7 @@
       const squad = document.getElementById('form-player-squad').value;
       const role = document.getElementById('form-player-role').value;
       const passcode = document.getElementById('form-player-passcode').value;
+      const invoice = parseFloat(document.getElementById('form-player-invoice').value) || 0;
 
       if (editId) {
         // Edit existing
@@ -474,12 +564,15 @@
           p.squad = squad;
           p.role = role;
           p.passcode = passcode;
+          p.invoiceDue = invoice;
         }
       } else {
         // Add new
         const newPlayer = {
           id: Date.now().toString(),
           name, squad, role, passcode,
+          invoiceDue: invoice,
+          photo: DEFAULT_AVATAR,
           matches: []
         };
         players.push(newPlayer);
@@ -515,6 +608,7 @@
       const newMatch = {
         date: document.getElementById('match-date').value,
         format: document.getElementById('match-format').value,
+        playingFor: document.getElementById('match-playing-for').value,
         opp: document.getElementById('match-opp').value,
         runs: document.getElementById('match-runs').value || 0,
         balls: document.getElementById('match-balls').value || 0,
